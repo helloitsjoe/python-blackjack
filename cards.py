@@ -1,9 +1,11 @@
+import random
+
 class Card:
     def __init__(self, num):
         suits = ['clubs', 'diamonds', 'hearts', 'spades']
-        self.num = num % 13 + 1
+        self.num = num % 13 or 13
         self.suit = suits[num % 4]
-        self.value = num
+        self.value = self.num
         self.face = self.num
     
     def __repr__(self):
@@ -39,10 +41,12 @@ class Deck:
         self.create_deck()
 
     def create_deck(self):
-        for n in range(52):
+        for n in range(1,53):
             self.cards.append(Card(n))
-        # print('cards:', list(self.cards))
 
     def deal_one(self):
         card = self.cards.pop()
         return card
+
+    def shuffle(self):
+        self.cards = random.sample(self.cards, len(self.cards))
