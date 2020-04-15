@@ -36,13 +36,17 @@ class Card:
         self.__face = faces.get(num, num)
 
 class Deck:
-    def __init__(self):
-        self.cards = [];
-        self.create_deck()
+    def __init__(self, cards=None):
+        if not cards:
+            cards = self.create_deck()
+
+        self.cards = cards
 
     def create_deck(self):
+        cards = []
         for n in range(1,53):
-            self.cards.append(Card(n))
+            cards.append(Card(n))
+        return cards
 
     def deal_one(self):
         card = self.cards.pop()

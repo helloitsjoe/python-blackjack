@@ -1,5 +1,6 @@
 from game import Game
 from cards import Deck
+from player import Player
 import pytest
 
 # helper for map
@@ -45,15 +46,13 @@ player_turn_test_data = [
     ('stay', 2),
     ('S', 2),
     ('s', 2),
-    # how to test this? ('x', 2),
+    ('x', 2),
 ]
 
-# @pytest.mark.parametrize('input,expected', player_turn_test_data)
-# def test_player_turn(monkeypatch, input, expected):
-#     monkeypatch.setattr('builtins.input', lambda x: input)
-#     game = Game()
-#     game.init_deck()
-#     game.deal_player()
-#     game.player_turn()
-#     assert len(game.player.cards) == expected
+@pytest.mark.parametrize('input,expected', player_turn_test_data)
+def test_player_turn(monkeypatch, input, expected):
+    monkeypatch.setattr('builtins.input', lambda x: input)
+    game = Game(player=Player(turns_remaining=1))
+    game.start()
+    assert len(game.player.cards) == expected
 
