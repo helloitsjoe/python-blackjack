@@ -1,5 +1,6 @@
-from player import Player, Dealer, Statuses
+from player import AbstractPlayer, Player, Dealer, Statuses
 from cards import Card, Deck
+import pytest
 
 deck_bust = [10, 6, 6]
 deck_stay = [10, 10, 2]
@@ -9,6 +10,11 @@ def make_cards(nums):
     # Cards pop off the end
     nums.reverse()
     return list(map(lambda num: Card(num), nums))
+
+def test_abstract_player():
+    with pytest.raises(BaseException, match="overridden"):
+        player = AbstractPlayer()
+        player.play_turn()
 
 def test_status_blackjack():
     player = Player()
@@ -43,4 +49,3 @@ def test_dealer_stay():
     dealer.play_turn(Deck(cards=cards))
     assert dealer.status == Statuses['PLAYING']
     assert dealer.total == 20
-

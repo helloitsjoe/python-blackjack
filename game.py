@@ -1,4 +1,4 @@
-# TODO: 
+# TODO:
 # Hide cards
 # Multiplayer
 
@@ -21,8 +21,19 @@ class Game:
         self.init_deck()
         self.deal_player()
         self.deal_dealer()
-        status = self.player.play_turn(self.deck)
-        if status == Statuses['PLAYING']:
+        self.player_go()
+        self.dealer_go()
+
+    def start_server(self):
+        self.init_deck()
+        self.deal_player()
+        self.deal_dealer()
+
+    def player_go(self):
+        self.player.play_turn(self.deck)
+
+    def dealer_go(self):
+        if self.player.status == Statuses['PLAYING']:
             self.dealer.play_turn(self.deck)
         self.end_game()
 
@@ -54,4 +65,5 @@ class Game:
             print('YOU TIE!')
 
 if __name__ == '__main__':
-    Game().start()
+    game = Game()
+    game.start()

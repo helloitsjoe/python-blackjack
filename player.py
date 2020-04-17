@@ -7,8 +7,7 @@ Statuses = {
     'DONE': 'DONE',
 }
 
-class Player:
-
+class AbstractPlayer:
     def __init__(self, turns_remaining=10):
         self.name = ''
         self.cards = []
@@ -31,12 +30,16 @@ class Player:
         elif self.total > 21:
             self.status = Statuses['BUST']
 
+    def play_turn(self):
+        raise BaseException('play_turn is abstract, must be overridden')
+
+class Player(AbstractPlayer):
     def play_turn(self, deck):
         answer = input('Hit or stay? ')
 
         self.turns_remaining -= 1
         if self.turns_remaining == 0:
-            self.status = 'DONE' 
+            self.status = 'DONE'
 
         if answer.lower()[0] == 'h':
             self.add_card(deck.deal_one())
@@ -46,6 +49,7 @@ class Player:
             if (self.status == Statuses['BUST'] or
                 self.status == Statuses['BLACKJACK']):
                 return self.status
+        # Anything other than 'hit' or 'stay', repeat question
         elif answer.lower()[0] != 's':
             if self.status == Statuses['PLAYING']:
                 return self.play_turn(deck)
@@ -55,5 +59,5 @@ class Dealer(Player):
     def play_turn(self, deck):
         print('Dealer:', self.total, str(self.cards))
         if self.total < 17:
-            self.add_card(deck.deal_one()) 
+            self.add_card(deck.deal_one())
             return self.play_turn(deck)
