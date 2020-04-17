@@ -1,10 +1,13 @@
-from flask import Flask, render_template
-app = Flask(__name__)
+from flask import Flask, jsonify
+from flask_cors import CORS
 
-@app.route('/')
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/game', methods=['POST'])
 def index():
-    # return '<button onclick="console.log(\'hi\')">Click</button>'
-    return render_template('index.html')
+    return jsonify(data="Hello there")
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    # debug=True will reload on change
+    app.run(host='0.0.0.0', port=5000, debug=True)
