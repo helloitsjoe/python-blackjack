@@ -5,6 +5,7 @@
 from cards import Deck, Card
 from player import Player, Dealer, Statuses
 
+
 class Game:
     # Gotcha: In python, default args are evaluated when the module
     # is evaluated, NOT at runtime. Default args will be mutated!
@@ -32,38 +33,48 @@ class Game:
     def player_go(self):
         self.player.play_turn(self.deck)
 
+    def player_go_remote(self):
+        card = self.player.play_remote(self.deck)
+        return card
+
     def dealer_go(self):
-        if self.player.status == Statuses['PLAYING']:
-            self.dealer.play_turn(self.deck)
+        if self.player.status == Statuses["PLAYING"]:
+            self.dealer.cards = self.dealer.play_turn(self.deck)
         self.end_game()
+        return self.dealer.cards
 
     def deal_player(self):
         self.player.add_card(self.deck.deal_one())
         self.player.add_card(self.deck.deal_one())
 
-        name = self.player.name or 'Player'
-        print(f'{name}:', self.player.total, str(self.player.cards))
+        name = self.player.name or "Player"
+        print(f"{name}:", self.player.total, str(self.player.cards))
 
     def deal_dealer(self):
         self.dealer.add_card(self.deck.deal_one())
         self.dealer.add_card(self.deck.deal_one())
 
-        print('Dealer:', self.dealer.total, str(self.dealer.cards))
+        print("Dealer:", self.dealer.total, str(self.dealer.cards))
 
     def end_game(self):
-        if self.player.status == Statuses['BUST']:
-            print('BUST... YOU LOSE!')
-        elif self.player.status == Statuses['BLACKJACK']:
-            print('BLACKJACK! YOU WIN!')
-        elif self.dealer.status == Statuses['BUST']:
-            print('DEALER BUSTS, YOU WIN!')
+        if self.player.status == Statuses["BUST"]:
+            print("BUST... YOU LOSE!")
+        elif self.player.status == Statuses["BLACKJACK"]:
+            print("BLACKJACK! YOU WIN!")
+        elif self.dealer.status == Statuses["BUST"]:
+            self.player.status = Statuses["WIN"]
+            print("DEALER BUSTS, YOU WIN!")
         elif self.dealer.total > self.player.total:
-            print('YOU LOSE!')
+            self.player.status = Statuses["LOSE"]
+            print("YOU LOSE!")
         elif self.dealer.total < self.player.total:
-            print('YOU WIN!')
+            self.player.status = Statuses["WIN"]
+            print("YOU WIN!")
         elif self.dealer.total == self.player.total:
-            print('YOU TIE!')
+            self.player.status = Statuses["TIE"]
+            print("YOU TIE!")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     game = Game()
     game.start()
