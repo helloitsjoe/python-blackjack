@@ -2,3 +2,5 @@ __pycache__
 venv
 *.swp
 .vscode
+node_modules
+.DS_Store
