@@ -8,4 +8,5 @@
 
 1. `yarn build` in `frontend` directory
 2. `docker-compose up --build` in root
+3. Open `localhost` in a browser
 
