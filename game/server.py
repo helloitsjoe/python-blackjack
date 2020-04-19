@@ -14,6 +14,7 @@ def serialize_cards(cards):
     return list(map(serialize_card, cards))
 
 
+# TODO: Multiple concurrent games
 game = None
 
 
@@ -31,8 +32,6 @@ def index():
         card = game.player_go_remote()
         data = {"card": serialize_card(card), "status": game.player.status}
         return jsonify(data=data)
-        # TODO: If player busts, deal dealer and finish game
-        # dealer_cards = serialize_cards(game.dealer.cards)
     if request.get_json()["type"] == "STAY":
         dealer_cards = game.dealer_go()
         data = {

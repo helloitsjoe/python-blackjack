@@ -1,4 +1,7 @@
 # TODO:
+# Restart deck if all cards are dealt
+# Betting
+# double down/split
 # Hide cards
 # Multiplayer
 
@@ -25,9 +28,10 @@ class Game:
         self.player_go()
         self.dealer_go()
 
-    def start_server(self):
-        self.init_deck()
-        self.deal_player()
+    def start_server(self, bet=0, shuffle=True):
+        if shuffle:
+            self.init_deck()
+        self.deal_player(bet)
         self.deal_dealer()
 
     def player_go(self):
@@ -43,7 +47,8 @@ class Game:
         self.end_game()
         return self.dealer.cards
 
-    def deal_player(self):
+    def deal_player(self, bet=0):
+        self.player.bet(bet)
         self.player.add_card(self.deck.deal_one())
         self.player.add_card(self.deck.deal_one())
 
@@ -60,18 +65,22 @@ class Game:
         if self.player.status == Statuses["BUST"]:
             print("BUST... YOU LOSE!")
         elif self.player.status == Statuses["BLACKJACK"]:
+            self.player.win(self.player.bet_amount * 2.5)
             print("BLACKJACK! YOU WIN!")
         elif self.dealer.status == Statuses["BUST"]:
             self.player.status = Statuses["WIN"]
+            self.player.win(self.player.bet_amount * 2)
             print("DEALER BUSTS, YOU WIN!")
         elif self.dealer.total > self.player.total:
             self.player.status = Statuses["LOSE"]
             print("YOU LOSE!")
         elif self.dealer.total < self.player.total:
             self.player.status = Statuses["WIN"]
+            self.player.win(self.player.bet_amount * 2)
             print("YOU WIN!")
         elif self.dealer.total == self.player.total:
             self.player.status = Statuses["TIE"]
+            self.player.win(self.player.bet_amount)
             print("YOU TIE!")
 
 

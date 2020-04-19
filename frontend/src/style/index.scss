@@ -46,17 +46,17 @@ body {
   background: transparent;
   color: oldlace;
   border-radius: 4px;
-}
 
-.control-button:disabled {
-  color: #666;
-  border-color: #666;
-}
+  &:disabled {
+    color: #666;
+    border-color: #666;
+  }
 
-.control-button:focus {
-  color: #333;
-  background-color: oldlace;
-  outline: none;
+  &:focus {
+    color: #333;
+    background-color: oldlace;
+    outline: none;
+  }
 }
 
 .cards {
@@ -72,19 +72,30 @@ body {
   width: 100px;
   height: 150px;
   text-align: center;
-  font-size: 120%;
+  line-height: 50%;
+  font-size: 200%;
   font-weight: 700;
   font-variant: small-caps;
-}
 
-.red {
-  color: red;
-}
+  &-red {
+    color: red;
+  }
 
-.black {
-  color: #333;
+  &-black {
+    color: #666;
+  }
 }
 
 .card-space {
   padding: 10px;
+}
+
+.totals {
+  font-size: 130%;
+  font-weight: 700;
+  width: 100%;
+
+  &-scores {
+    color: oldlace;
+  }
 }

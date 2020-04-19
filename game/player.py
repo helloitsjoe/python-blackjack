@@ -1,3 +1,5 @@
+from bank import Bank
+
 Statuses = {
     "PLAYING": "PLAYING",
     "BLACKJACK": "BLACKJACK",
@@ -10,19 +12,34 @@ Statuses = {
 
 
 class AbstractPlayer:
-    def __init__(self, turns_remaining=10):
+    def __init__(self, turns_remaining=10, bank=None):
         self.name = ""
         self.cards = []
         self.total = 0
         self.status = Statuses["PLAYING"]
         self.turns_remaining = turns_remaining
+        self._bank = bank or Bank(1000)
+        self.bet_amount = 0
+
+    @property
+    def balance(self):
+        return self._bank.balance
 
     def prompt_name(self):
         self.name = input("Enter your name: ")
 
+    def bet(self, amount):
+        self.bet_amount = self._bank.withdraw(amount)
+
+    def win(self, amount):
+        self._bank.deposit(amount)
+
     def add_card(self, card):
         self.cards.append(card)
-        self.total += card.value
+        value = card.value
+        if value == 1 and self.total + 11 <= 21:
+            value = 11
+        self.total += value
 
         self.check_score()
         return card
