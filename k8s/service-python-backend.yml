@@ -1,0 +1,17 @@
+# Separate service/deployment configs for backend to allow
+# updates to deployment without changing service (which updates
+# backend port and requires rebuilding/pushing frontend
+apiVersion: v1
+kind: Service
+metadata:
+  name: blackjack-backend-lb
+  namespace: blackjack
+spec:
+  type: LoadBalancer
+  ports:
+    # Note: this port works as either 80 or 5000... but why?
+    - port: 5000
+      protocol: TCP
+      targetPort: 5000
+  selector:
+    app: blackjack-python-backend

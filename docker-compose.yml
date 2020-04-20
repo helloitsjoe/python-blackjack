@@ -3,12 +3,12 @@ version: '2.0'
 services:
   flask:
     build: ./game
-    image: python-blackjack-test
+    image: blackjack-python-backend
     ports:
       - 5000:5000
 
   frontend:
     build: ./frontend
-    image: preact-blackjack-test
+    image: blackjack-preact-frontend
     ports:
       - 80:80

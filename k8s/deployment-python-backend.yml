@@ -1,0 +1,31 @@
+# Separate service/deployment configs for backend to allow
+# updates to deployment without changing service (which updates
+# backend port and requires rebuilding/pushing frontend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blackjack-python-backend
+  labels:
+    name: blackjack-python-backend
+spec:
+  selector:
+    matchLabels:
+      app: blackjack-python-backend
+  replicas: 2
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: blackjack-python-backend
+    spec:
+      containers:
+        - image: helloitsjoe/blackjack-python-backend:minikube
+          imagePullPolicy: Always
+          name: blackjack-python-backend
+          ports:
+            - containerPort: 5000

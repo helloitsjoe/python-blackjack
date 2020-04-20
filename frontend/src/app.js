@@ -1,9 +1,9 @@
 import { h, Component } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useState, useRef, useEffect } from 'preact/hooks';
-import handleKeypress from './keyboard';
+import { getUrl, handleKeypress, debugMinikubePort } from './utils';
 
-const URL = 'http://0.0.0.0:5000/game';
+console.log(`URL:`, getUrl());
 
 const messages = {
   WAITING: 'WAITING...',
@@ -16,7 +16,7 @@ const messages = {
 };
 
 const f = type => {
-  return fetch(URL, {
+  return fetch(getUrl(), {
     method: 'POST',
     body: JSON.stringify({ type }),
     headers: { 'Content-Type': 'application/json' },
