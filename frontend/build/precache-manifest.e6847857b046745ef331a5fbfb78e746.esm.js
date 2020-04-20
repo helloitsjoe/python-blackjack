@@ -24,15 +24,15 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/assets/icons/mstile-150x150.png"
   },
   {
-    "revision": "6df2b15ba1bfd2039000",
-    "url": "/bundle.bdc35.css"
+    "revision": "e1f567bd57c1dca4a4dd",
+    "url": "/bundle.1b754.esm.js"
   },
   {
-    "revision": "6df2b15ba1bfd2039000",
-    "url": "/bundle.c0f30.esm.js"
+    "revision": "e1f567bd57c1dca4a4dd",
+    "url": "/bundle.7201d.css"
   },
   {
-    "revision": "aa4405ad4ce9c7a7847cdd0c2d8343f0",
+    "revision": "cdd9b26a1d72f68a9072535fc4d06db9",
     "url": "/index.html"
   },
   {
