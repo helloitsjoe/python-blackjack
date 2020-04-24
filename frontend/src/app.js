@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useState, useRef, useEffect } from 'preact/hooks';
-import { getUrl, handleKeypress, debugMinikubePort } from './utils';
+import { getUrl, handleKeypress } from './utils';
 
 console.log(`URL:`, getUrl());
 
@@ -15,10 +15,10 @@ const messages = {
   TIE: 'YOU TIE!',
 };
 
-const f = type => {
+const f = (type, balance, bet) => {
   return fetch(getUrl(), {
     method: 'POST',
-    body: JSON.stringify({ type }),
+    body: JSON.stringify({ type, balance, bet }),
     headers: { 'Content-Type': 'application/json' },
   })
     .then(res => res.json())
@@ -37,8 +37,12 @@ const hide = cards => [{ ...cards[0], value: 0, face: '', suit: '' }, ...cards.s
 
 export default function App() {
   const [playerCards, setPlayerCards] = useState([]);
+  const [playerTotal, setPlayerTotal] = useState(0);
   const [dealerCards, setDealerCards] = useState([]);
+  const [dealerTotal, setDealerTotal] = useState(0);
   const [status, setStatus] = useState('WAITING');
+  const [balance, setBalance] = useState(1000);
+  const [bet, setBet] = useState(25);
 
   const dealButton = useRef();
   const hitButton = useRef();
@@ -60,15 +64,20 @@ export default function App() {
   }, []);
 
   const deal = () =>
-    f('DEAL').then(data => {
-      setPlayerCards(data.player);
-      setDealerCards(hide(data.dealer));
+    f('DEAL', balance, bet).then(data => {
+      const hiddenDealer = hide(data.dealer_cards);
+      setPlayerCards(data.player_cards);
+      setPlayerTotal(data.player_total);
+      setDealerCards(hide(data.dealer_cards));
+      setDealerTotal(getTotal(hiddenDealer));
       setStatus('PLAYING');
+      setBalance(b => b - bet);
     });
 
   const hit = () =>
     f('HIT').then(data => {
       setPlayerCards(c => [...c, data.card]);
+      setPlayerTotal(data.total);
       setStatus(data.status);
     });
 
@@ -76,13 +85,25 @@ export default function App() {
     f('STAY').then(data => {
       console.log(`data:`, data);
       setDealerCards(data.dealer_cards);
+      setDealerTotal(data.dealer_total);
       setStatus(data.status);
+      setBalance(data.balance);
     });
 
   return (
     <div className="app">
       <div className="controls">
-        {/* TODO: Betting */}
+        <h2>${balance}</h2>
+        <label className="controls-bet">
+          <span>Bet: $</span>
+          <input
+            className="controls-betInput"
+            type="number"
+            step={25}
+            onChange={e => setBet(e.target.value)}
+            value={bet}
+          />
+        </label>
         <Button onClick={deal} ref={dealButton}>
           Deal
         </Button>
@@ -97,11 +118,11 @@ export default function App() {
           <table className="totals">
             <tr>
               <td>You:</td>
-              <td className="totals-scores">{getTotal(playerCards)}</td>
+              <td className="totals-scores">{playerTotal}</td>
             </tr>
             <tr>
               <td>Dealer:</td>
-              <td className="totals-scores">{getTotal(dealerCards)}</td>
+              <td className="totals-scores">{dealerTotal}</td>
             </tr>
           </table>
         )}
@@ -115,7 +136,7 @@ export default function App() {
 }
 
 const Button = forwardRef((props, ref) => (
-  <button {...props} className="control-button" ref={ref}>
+  <button {...props} className="controls-button" ref={ref}>
     {props.children}
   </button>
 ));

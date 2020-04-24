@@ -1,3 +1,6 @@
+const MINIKUBE_URL = 'http://192.168.64.2:32566/game';
+const LOCAL_URL = 'http://0.0.0.0:5000/game';
+
 export const getUrl = () => {
   if (typeof window !== 'undefined' && window.location.search) {
     const debugUrl = debugMinikubePort(window.location.search);
@@ -6,21 +9,14 @@ export const getUrl = () => {
     }
   }
 
-  console.log(`process.env.MINIKUBE:`, process.env.MINIKUBE);
-  return process.env.MINIKUBE ? 'http://192.168.64.2:32566/game' : 'http://0.0.0.0:5000/game';
-
-  //   // Use minikube url if in production
-  //   if (process.env.NODE_ENV === 'production' && process.env.PREACT_APP_MINIKUBE === 'true') {
-  //     return 'http://192.168.64.2:31315/game';
-  //   }
-
-  //   return 'http://0.0.0.0:5000/game';
+  return process.env.MINIKUBE ? MINIKUBE_URL : LOCAL_URL;
 };
 
 export function handleKeypress(e) {
   const buttons = document.querySelectorAll('button');
   const currIdx = Array.from(buttons).findIndex(el => e.target.isEqualNode(el));
 
+  // j moves to next button
   if (e.key === 'j') {
     const targetIdx = currIdx + 1;
     if (targetIdx < buttons.length) {
@@ -28,6 +24,7 @@ export function handleKeypress(e) {
     }
   }
 
+  // k moves to previous button
   if (e.key === 'k') {
     const targetIdx = currIdx - 1;
     if (targetIdx > -1) {
@@ -36,7 +33,7 @@ export function handleKeypress(e) {
   }
 }
 
-export const debugMinikubePort = search => {
+const debugMinikubePort = search => {
   const { host, port } = search
     .replace('?', '')
     .split('&')

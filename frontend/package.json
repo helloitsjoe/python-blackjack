@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build:minikube": "MINIKUBE=true preact build",
-    "build:local": "preact build",
+    "build:minikube": "MINIKUBE=true preact build --no-esm --no-sw",
+    "build:local": "preact build --no-esm --no-sw",
     "serve": "sirv build --cors --single",
     "watch": "preact watch",
     "lint": "eslint src",
