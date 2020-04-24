@@ -66,10 +66,46 @@ def test_dealer_stay():
     assert dealer.total == 20
 
 
-def test_aces_1_or_11():
-    player = Player()
-    player.add_card(Card(1))
-    player.add_card(Card(1))
-    assert player.total == 12
-    player.add_card(Card(9))
-    assert player.status == Statuses["BLACKJACK"]
+class TestAces:
+    def test_two_aces(self):
+        player = Player()
+        player.add_card(Card(1))
+        player.add_card(Card(1))
+        assert player.total == 12
+        player.add_card(Card(9))
+        assert player.status == Statuses["BLACKJACK"]
+
+    def test_two_aces_no_bust(self):
+        player = Player()
+        player.add_card(Card(1))
+        player.add_card(Card(1))
+        assert player.total == 12
+        player.add_card(Card(8))
+        assert player.total == 20
+        player.add_card(Card(2))
+        assert player.total == 12
+        assert player.status == Statuses["PLAYING"]
+
+    def test_one_ace(self):
+        player = Player()
+        player.add_card(Card(10))
+        player.add_card(Card(1))
+        assert player.total == 21
+        assert player.status == Statuses["BLACKJACK"]
+
+    def test_add_ace(self):
+        player = Player()
+        player.add_card(Card(4))
+        player.add_card(Card(10))
+        player.add_card(Card(1))
+        assert player.total == 15
+        assert player.status == Statuses["PLAYING"]
+        player.add_card(Card(10))
+        assert player.total == 25
+        assert player.status == Statuses["BUST"]
+
+    def test_six(self):
+        player = Player()
+        player.add_card(Card(1))
+        player.add_card(Card(5))
+        assert player.total == 16

@@ -1,8 +1,7 @@
 # TODO:
 # Restart deck if all cards are dealt
-# Betting
+# Betting (non-server)
 # double down/split
-# Hide cards
 # Multiplayer
 
 from cards import Deck, Card

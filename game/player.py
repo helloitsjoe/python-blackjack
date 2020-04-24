@@ -36,11 +36,13 @@ class AbstractPlayer:
 
     def add_card(self, card):
         self.cards.append(card)
-        value = card.value
-        # TODO: I think this logic needs to be more robust (only handles ace as first card?)
-        if value == 1 and self.total + 11 <= 21:
-            value = 11
-        self.total += value
+        self.total = 0
+        for card in self.cards:
+            self.total += card.value
+        for card in self.cards:
+            if self.total > 21 and card.value == 11:
+                card.value = 1
+                self.total -= 10
 
         self.check_score()
         return card

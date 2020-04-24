@@ -1,6 +1,8 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, logging
 from flask_cors import CORS
 from game import Game
+from bank import Bank
+from player import Player
 
 app = Flask(__name__)
 CORS(app)
@@ -20,22 +22,37 @@ game = None
 
 @app.route("/game", methods=["POST"])
 def index():
-    if request.get_json()["type"] == "DEAL":
+    json = request.get_json()
+
+    if json["type"] == "DEAL":
         global game
-        game = Game()
-        game.start_server()
+        balance = json["balance"]
+        player = Player(bank=Bank(balance))
+        game = Game(player=player)
+        game.start_server(bet=int(json["bet"]))
         player_cards = serialize_cards(game.player.cards)
         dealer_cards = serialize_cards(game.dealer.cards)
-        data = {"player": player_cards, "dealer": dealer_cards}
+        data = {
+            "player_cards": player_cards,
+            "player_total": player.total,
+            # "dealer_total": game.dealer.total,
+            "dealer_cards": dealer_cards,
+        }
         return jsonify(data=data)
-    if request.get_json()["type"] == "HIT":
+    if json["type"] == "HIT":
         card = game.player_go_remote()
-        data = {"card": serialize_card(card), "status": game.player.status}
+        data = {
+            "card": serialize_card(card),
+            "total": game.player.total,
+            "status": game.player.status,
+        }
         return jsonify(data=data)
-    if request.get_json()["type"] == "STAY":
+    if json["type"] == "STAY":
         dealer_cards = game.dealer_go()
         data = {
             "dealer_cards": serialize_cards(dealer_cards),
+            "dealer_total": game.dealer.total,
+            "balance": game.player.balance,
             "status": game.player.status,
         }
         return jsonify(data=data)
