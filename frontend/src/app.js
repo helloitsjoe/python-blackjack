@@ -1,7 +1,7 @@
 import { h, Component } from 'preact';
-import { forwardRef } from 'preact/compat';
+import { forwardRef, Fragment } from 'preact/compat';
 import { useState, useRef, useEffect } from 'preact/hooks';
-import { getUrl, handleKeypress } from './utils';
+import { getUrl, handleKeypress, sendCommand } from './utils';
 
 console.log(`URL:`, getUrl());
 
@@ -15,27 +15,10 @@ const messages = {
   TIE: 'YOU TIE!',
 };
 
-const f = (type, balance, bet) => {
-  return fetch(getUrl(), {
-    method: 'POST',
-    body: JSON.stringify({ type, balance, bet }),
-    headers: { 'Content-Type': 'application/json' },
-  })
-    .then(res => res.json())
-    .then(j => {
-      if (j.message) {
-        throw new Error(res.message);
-      }
-      console.log(j.data);
-      return j.data || j;
-    })
-    .catch(console.error);
-};
-
 const getTotal = cards => cards.reduce((acc, curr) => acc + curr.value, 0);
 const hide = cards => [{ ...cards[0], value: 0, face: '', suit: '' }, ...cards.slice(1)];
 
-export default function App() {
+export default function App({ send = sendCommand }) {
   const [playerCards, setPlayerCards] = useState([]);
   const [playerTotal, setPlayerTotal] = useState(0);
   const [dealerCards, setDealerCards] = useState([]);
@@ -64,7 +47,7 @@ export default function App() {
   }, []);
 
   const deal = () =>
-    f('DEAL', balance, bet).then(data => {
+    send('DEAL', balance, bet).then(data => {
       const hiddenDealer = hide(data.dealer_cards);
       setPlayerCards(data.player_cards);
       setPlayerTotal(data.player_total);
@@ -75,14 +58,14 @@ export default function App() {
     });
 
   const hit = () =>
-    f('HIT').then(data => {
+    send('HIT').then(data => {
       setPlayerCards(c => [...c, data.card]);
       setPlayerTotal(data.total);
       setStatus(data.status);
     });
 
   const stay = () =>
-    f('STAY').then(data => {
+    send('STAY').then(data => {
       console.log(`data:`, data);
       setDealerCards(data.dealer_cards);
       setDealerTotal(data.dealer_total);
@@ -115,16 +98,14 @@ export default function App() {
         </Button>
         <h2>{messages[status]}</h2>
         {status !== 'WAITING' && (
-          <table className="totals">
-            <tr>
-              <td>You:</td>
-              <td className="totals-scores">{playerTotal}</td>
-            </tr>
-            <tr>
-              <td>Dealer:</td>
-              <td className="totals-scores">{dealerTotal}</td>
-            </tr>
-          </table>
+          <div className="totals">
+            <label>
+              You: <span className="totals-scores">{playerTotal}</span>
+            </label>
+            <label>
+              Dealer: <span className="totals-scores">{dealerTotal}</span>
+            </label>
+          </div>
         )}
       </div>
       <div className="game">
@@ -171,7 +152,7 @@ function Card({ face = 'King', suit = 'Clubs' }) {
 
   return (
     <div className="card-space">
-      <div className={`card card-${color}`}>
+      <div data-testid="card" className={`card card-${color}`}>
         <p>{face}</p>
         <h2>{icon}</h2>
       </div>

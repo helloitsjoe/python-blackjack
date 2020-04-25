@@ -117,8 +117,13 @@ input {
   font-size: 130%;
   font-weight: 700;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   &-scores {
     color: oldlace;
+    justify-content: space-around;
+    padding: 1em;
   }
 }

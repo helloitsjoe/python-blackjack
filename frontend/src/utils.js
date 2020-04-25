@@ -12,6 +12,23 @@ export const getUrl = () => {
   return process.env.MINIKUBE ? MINIKUBE_URL : LOCAL_URL;
 };
 
+export const sendCommand = (type, balance, bet) => {
+  return fetch(getUrl(), {
+    method: 'POST',
+    body: JSON.stringify({ type, balance, bet }),
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then(res => res.json())
+    .then(j => {
+      if (j.message) {
+        throw new Error(res.message);
+      }
+      console.log(j.data);
+      return j.data || j;
+    })
+    .catch(console.error);
+};
+
 export function handleKeypress(e) {
   const buttons = document.querySelectorAll('button');
   const currIdx = Array.from(buttons).findIndex(el => e.target.isEqualNode(el));
