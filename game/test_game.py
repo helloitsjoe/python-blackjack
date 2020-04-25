@@ -64,47 +64,68 @@ def test_player_turn(monkeypatch, input, expected):
     assert len(game.player.cards) == expected
 
 
-def test_player_bet():
-    player = Player(bank=Bank(10))
-    game = Game(player=player, deck=Deck(cards=make_cards([10, 10, 10, 10, 10])))
-    game.start_server(bet=5)
-    assert player.balance == 5
-    assert player.total == 20
-    game.player_go_remote()
-    assert player.total == 30
-    assert player.status == Statuses["BUST"]
-    assert player.balance == 5
+class TestBet:
+    def test_player_bet(self):
+        player = Player(bank=Bank(10))
+        game = Game(player=player, deck=Deck(cards=make_cards([10, 10, 10, 10, 10])))
+        game.start_server(bet=5)
+        assert player.balance == 5
+        assert player.total == 20
+        game.player_go_remote()
+        assert player.total == 30
+        assert player.status == Statuses["BUST"]
+        assert player.balance == 5
 
+    def test_player_win(self):
+        player = Player(bank=Bank(10))
+        # TODO: Why is order not deterministic?
+        game = Game(player=player, deck=Deck(cards=make_cards([10, 10, 10, 9])))
+        game.start_server(bet=5, shuffle=False)
+        assert player.balance == 5
+        assert player.total == 20
+        game.dealer_go()
+        assert player.status == Statuses["WIN"]
+        assert player.balance == 15
 
-def test_player_win():
-    player = Player(bank=Bank(10))
-    # TODO: Why is order not deterministic?
-    game = Game(player=player, deck=Deck(cards=make_cards([10, 10, 10, 9])))
-    game.start_server(bet=5, shuffle=False)
-    assert player.balance == 5
-    assert player.total == 20
-    game.dealer_go()
-    assert player.status == Statuses["WIN"]
-    assert player.balance == 15
+    def test_player_blackjack(self):
+        player = Player(bank=Bank(10))
+        game = Game(player=player, deck=Deck(cards=make_cards([10, 1, 10, 9])))
+        game.start_server(bet=5, shuffle=False)
+        assert player.balance == 5
+        assert player.total == 21
+        game.dealer_go()
+        assert player.status == Statuses["BLACKJACK"]
+        assert player.balance == 17.5
 
+    def test_tie(self):
+        player = Player(bank=Bank(10))
+        game = Game(player=player, deck=Deck(cards=make_cards([10, 9, 10, 9])))
+        game.start_server(bet=5, shuffle=False)
+        assert player.balance == 5
+        assert player.total == 19
+        game.dealer_go()
+        assert player.status == Statuses["TIE"]
+        assert player.balance == 10
 
-def test_player_blackjack():
-    player = Player(bank=Bank(10))
-    game = Game(player=player, deck=Deck(cards=make_cards([10, 1, 10, 9])))
-    game.start_server(bet=5, shuffle=False)
-    assert player.balance == 5
-    assert player.total == 21
-    game.dealer_go()
-    assert player.status == Statuses["BLACKJACK"]
-    assert player.balance == 17.5
+    def test_double_down(self):
+        player = Player(bank=Bank(10))
+        game = Game(player=player, deck=Deck(cards=make_cards([10, 1, 10, 9, 9])))
+        game.start_server(bet=5, shuffle=False)
+        assert player.balance == 5
+        assert player.total == 21
+        player.double_down()
+        assert player.total == 20
+        game.dealer_go()
+        assert dealer.total == 19
+        assert player.status == Statuses["WIN"]
+        assert player.balance == 10
 
-
-def test_tie():
-    player = Player(bank=Bank(10))
-    game = Game(player=player, deck=Deck(cards=make_cards([10, 9, 10, 9])))
-    game.start_server(bet=5, shuffle=False)
-    assert player.balance == 5
-    assert player.total == 19
-    game.dealer_go()
-    assert player.status == Statuses["TIE"]
-    assert player.balance == 10
+    # def test_split(self):
+    #     player = Player(bank=Bank(10))
+    #     game = Game(player=player, deck=Deck(cards=make_cards([10, 9, 10, 9])))
+    #     game.start_server(bet=5, shuffle=False)
+    #     assert player.balance == 5
+    #     assert player.total == 19
+    #     game.dealer_go()
+    #     assert player.status == Statuses["TIE"]
+    #     assert player.balance == 10

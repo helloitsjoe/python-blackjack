@@ -47,6 +47,9 @@ class AbstractPlayer:
         self.check_score()
         return card
 
+    def double_down(self):
+        self.bet(self.bet_amount)
+
     def check_score(self):
         if self.total == 21:
             self.status = Statuses["BLACKJACK"]
