@@ -1,9 +1,14 @@
 import { h, Component } from 'preact';
 import { forwardRef, Fragment } from 'preact/compat';
-import { useState, useRef, useEffect } from 'preact/hooks';
+import { useState, useRef, useEffect, useReducer } from 'preact/hooks';
 import { getUrl, handleKeypress, sendCommand } from './utils';
 
 console.log(`URL:`, getUrl());
+
+const HIT = 'HIT';
+const DEAL = 'DEAL';
+const STAY = 'STAY';
+const DOUBLE = 'DOUBLE';
 
 const messages = {
   WAITING: 'WAITING...',
@@ -18,14 +23,59 @@ const messages = {
 const getTotal = cards => cards.reduce((acc, curr) => acc + curr.value, 0);
 const hide = cards => [{ ...cards[0], value: 0, face: '', suit: '' }, ...cards.slice(1)];
 
+const gameReducer = (s, a) => {
+  console.log(`data:`, a.data);
+  const {
+    player_cards: playerCards,
+    player_total: playerTotal,
+    dealer_cards: dealerCards,
+    dealer_total: dealerTotal,
+    card,
+    status,
+    balance,
+  } = a.data;
+
+  switch (a.type) {
+    case DEAL: {
+      const hiddenDealer = hide(dealerCards);
+      return {
+        ...s,
+        playerCards,
+        playerTotal,
+        dealerCards: hiddenDealer,
+        dealerTotal: getTotal(hiddenDealer),
+        balance: s.balance - s.bet,
+        status: 'PLAYING',
+      };
+    }
+    case HIT: {
+      return { ...s, playerCards: [...s.playerCards, card], playerTotal, status };
+    }
+    case STAY: {
+      return { ...s, dealerCards, dealerTotal, balance, status };
+    }
+    case DOUBLE: {
+      const playerCards = [...s.playerCards, card];
+      return { ...s, playerCards, dealerCards, dealerTotal, playerTotal, balance, status };
+    }
+    default:
+      return s;
+  }
+};
+
 export default function App({ send = sendCommand }) {
-  const [playerCards, setPlayerCards] = useState([]);
-  const [playerTotal, setPlayerTotal] = useState(0);
-  const [dealerCards, setDealerCards] = useState([]);
-  const [dealerTotal, setDealerTotal] = useState(0);
-  const [status, setStatus] = useState('WAITING');
-  const [balance, setBalance] = useState(1000);
-  const [bet, setBet] = useState(25);
+  const [
+    { playerCards, playerTotal, dealerCards, dealerTotal, status, balance, bet },
+    dispatch,
+  ] = useReducer(gameReducer, {
+    playerCards: [],
+    dealerCards: [],
+    playerTotal: 0,
+    dealerTotal: 0,
+    status: 'WAITING',
+    balance: 1000,
+    bet: 50,
+  });
 
   const dealButton = useRef();
   const hitButton = useRef();
@@ -47,46 +97,46 @@ export default function App({ send = sendCommand }) {
   }, []);
 
   const deal = () =>
-    send('DEAL', balance, bet).then(data => {
-      const hiddenDealer = hide(data.dealer_cards);
-      setPlayerCards(data.player_cards);
-      setPlayerTotal(data.player_total);
-      setDealerCards(hide(data.dealer_cards));
-      setDealerTotal(getTotal(hiddenDealer));
-      setStatus('PLAYING');
-      setBalance(b => b - bet);
+    send(DEAL, balance, bet).then(data => {
+      dispatch({ type: DEAL, data });
     });
 
   const hit = () =>
-    send('HIT').then(data => {
-      setPlayerCards(c => [...c, data.card]);
-      setPlayerTotal(data.total);
-      setStatus(data.status);
+    send(HIT).then(data => {
+      dispatch({ type: HIT, data });
     });
 
   const stay = () =>
-    send('STAY').then(data => {
-      console.log(`data:`, data);
-      setDealerCards(data.dealer_cards);
-      setDealerTotal(data.dealer_total);
-      setStatus(data.status);
-      setBalance(data.balance);
+    send(STAY).then(data => {
+      dispatch({ type: STAY, data });
     });
+
+  const doubleDown = () =>
+    send(DOUBLE).then(data => {
+      dispatch({ type: DOUBLE, data });
+    });
+
+  const changeBet = e => {
+    e.preventDefault();
+    deal();
+  };
 
   return (
     <div className="app">
       <div className="controls">
         <h2>${balance}</h2>
-        <label className="controls-bet">
-          <span>Bet: $</span>
-          <input
-            className="controls-betInput"
-            type="number"
-            step={25}
-            onChange={e => setBet(e.target.value)}
-            value={bet}
-          />
-        </label>
+        <form onSubmit={changeBet}>
+          <label className="controls-bet">
+            <span>Bet: $</span>
+            <input
+              className="controls-betInput"
+              type="number"
+              step={25}
+              onChange={e => setBet(e.target.value)}
+              value={bet}
+            />
+          </label>
+        </form>
         <Button onClick={deal} ref={dealButton}>
           Deal
         </Button>
@@ -95,6 +145,9 @@ export default function App({ send = sendCommand }) {
         </Button>
         <Button disabled={status !== 'PLAYING'} onClick={stay}>
           Stay
+        </Button>
+        <Button disabled={status !== 'PLAYING'} onClick={doubleDown}>
+          Double Down
         </Button>
         <h2>{messages[status]}</h2>
         {status !== 'WAITING' && (

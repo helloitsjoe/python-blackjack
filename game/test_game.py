@@ -109,16 +109,20 @@ class TestBet:
 
     def test_double_down(self):
         player = Player(bank=Bank(10))
-        game = Game(player=player, deck=Deck(cards=make_cards([10, 1, 10, 9, 9])))
+        deck = Deck(cards=make_cards([5, 5, 10, 9, 10]))
+        game = Game(player=player, deck=deck)
         game.start_server(bet=5, shuffle=False)
         assert player.balance == 5
-        assert player.total == 21
-        player.double_down()
+        assert player.total == 10
+        player.double_down(deck.deal_one())
+        # Should double bet and withdraw
+        assert player.balance == 0
         assert player.total == 20
         game.dealer_go()
-        assert dealer.total == 19
+        assert game.dealer.total == 19
         assert player.status == Statuses["WIN"]
-        assert player.balance == 10
+        # Should win double original bet
+        assert player.balance == 20
 
     # def test_split(self):
     #     player = Player(bank=Bank(10))

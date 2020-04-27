@@ -23,8 +23,9 @@ game = None
 @app.route("/game", methods=["POST"])
 def index():
     json = request.get_json()
+    type = json["type"]
 
-    if json["type"] == "DEAL":
+    if type == "DEAL":
         global game
         balance = json["balance"]
         player = Player(bank=Bank(balance))
@@ -39,18 +40,34 @@ def index():
             "dealer_cards": dealer_cards,
         }
         return jsonify(data=data)
-    if json["type"] == "HIT":
+
+    if type == "HIT":
         card = game.player_go_remote()
         data = {
             "card": serialize_card(card),
-            "total": game.player.total,
+            "player_total": game.player.total,
             "status": game.player.status,
         }
         return jsonify(data=data)
-    if json["type"] == "STAY":
+
+    if type == "STAY":
         dealer_cards = game.dealer_go()
         data = {
             "dealer_cards": serialize_cards(dealer_cards),
+            "dealer_total": game.dealer.total,
+            "balance": game.player.balance,
+            "status": game.player.status,
+        }
+        return jsonify(data=data)
+
+    if type == "DOUBLE":
+        card = game.player_double_down_remote()
+        # Double down should end game
+        dealer_cards = game.dealer_go()
+        data = {
+            "card": serialize_card(card),
+            "dealer_cards": serialize_cards(dealer_cards),
+            "player_total": game.player.total,
             "dealer_total": game.dealer.total,
             "balance": game.player.balance,
             "status": game.player.status,

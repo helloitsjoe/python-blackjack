@@ -28,7 +28,7 @@ class TestBank:
         assert player.balance == 15
 
 
-def test_status_blackjack():
+def test_status_playing():
     player = Player()
     assert player.total == 0
     assert player.status == Statuses["PLAYING"]
@@ -37,6 +37,16 @@ def test_status_blackjack():
     assert player.total == 20
     assert player.status == Statuses["PLAYING"]
     player.add_card(Card(1))
+    assert player.total == 21
+    assert player.status == Statuses["PLAYING"]
+
+
+def test_status_blackjack():
+    player = Player()
+    assert player.total == 0
+    assert player.status == Statuses["PLAYING"]
+    player.add_card(Card(1))
+    player.add_card(Card(10))
     assert player.total == 21
     assert player.status == Statuses["BLACKJACK"]
 
@@ -73,7 +83,7 @@ class TestAces:
         player.add_card(Card(1))
         assert player.total == 12
         player.add_card(Card(9))
-        assert player.status == Statuses["BLACKJACK"]
+        assert player.status == Statuses["PLAYING"]
 
     def test_two_aces_no_bust(self):
         player = Player()

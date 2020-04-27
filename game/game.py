@@ -1,7 +1,7 @@
 # TODO:
 # Restart deck if all cards are dealt
 # Betting (non-server)
-# double down/split
+# split
 # Multiplayer
 
 from cards import Deck, Card
@@ -38,6 +38,10 @@ class Game:
 
     def player_go_remote(self):
         card = self.player.play_remote(self.deck)
+        return card
+
+    def player_double_down_remote(self):
+        card = self.player.double_down(self.deck.deal_one())
         return card
 
     def dealer_go(self):

@@ -29,7 +29,7 @@ class AbstractPlayer:
         self.name = input("Enter your name: ")
 
     def bet(self, amount):
-        self.bet_amount = self._bank.withdraw(amount)
+        self.bet_amount += self._bank.withdraw(amount)
 
     def win(self, amount):
         self._bank.deposit(amount)
@@ -39,6 +39,8 @@ class AbstractPlayer:
         self.total = 0
         for card in self.cards:
             self.total += card.value
+
+        # Handle aces
         for card in self.cards:
             if self.total > 21 and card.value == 11:
                 card.value = 1
@@ -47,13 +49,15 @@ class AbstractPlayer:
         self.check_score()
         return card
 
-    def double_down(self):
+    def double_down(self, card):
         self.bet(self.bet_amount)
+        return self.add_card(card)
 
     def check_score(self):
-        if self.total == 21:
+        if len(self.cards) == 2 and self.total == 21:
             self.status = Statuses["BLACKJACK"]
         elif self.total > 21:
+            # This ends the game on the frontend
             self.status = Statuses["BUST"]
 
     def play_turn(self):
@@ -62,10 +66,6 @@ class AbstractPlayer:
 
 class Player(AbstractPlayer):
     def play_remote(self, deck):
-        self.turns_remaining -= 1
-        if self.turns_remaining == 0:
-            self.status = "DONE"
-
         card = self.add_card(deck.deal_one())
         print("Player:", self.total, str(self.cards))
         print("status", self.status)
