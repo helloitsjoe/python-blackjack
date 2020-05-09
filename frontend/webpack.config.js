@@ -12,6 +12,7 @@ const config = makeWebpackConfig({
     htmlPlugin,
     new webpack.DefinePlugin({
       'process.env.MINIKUBE': JSON.stringify(process.env.MINIKUBE),
+      'process.env.MINIKUBE_URL': JSON.stringify(process.env.MINIKUBE_URL),
     }),
   ],
   resolve: {

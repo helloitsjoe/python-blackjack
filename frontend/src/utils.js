@@ -9,7 +9,9 @@ export const getUrl = () => {
     }
   }
 
-  return process.env.MINIKUBE ? MINIKUBE_URL : LOCAL_URL;
+  // return process.env.MINIKUBE ? MINIKUBE_URL : LOCAL_URL;
+  const url = process.env.MINIKUBE_URL || 'http://0.0.0.:5000';
+  return `${url}/game`;
 };
 
 export const sendCommand = (type, balance, bet) => {
