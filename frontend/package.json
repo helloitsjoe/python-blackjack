@@ -4,11 +4,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build:minikube": "MINIKUBE=true preact build --no-esm --no-sw",
-    "build:local": "preact build --no-esm --no-sw",
-    "serve": "sirv build --cors --single",
-    "watch": "preact watch",
-    "lint": "eslint src",
+    "build:minikube": "MINIKUBE=true webpack --mode=production",
+    "build:local": "webpack --mode=production",
+    "watch": "webpack --mode=development --watch",
     "test": "jest"
   },
   "eslintConfig": {
@@ -18,19 +16,31 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
     "@testing-library/preact": "^1.0.2",
+    "babel-loader": "^8.1.0",
+    "babel-react-simple": "^1.0.2",
+    "css-loader": "^3.5.3",
     "enzyme": "^3.10.0",
     "enzyme-adapter-preact-pure": "^2.0.0",
     "eslint": "^6.0.1",
     "eslint-config-preact": "^1.1.0",
+    "html-webpack-plugin": "^4.3.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.9.0",
     "jest-preset-preact": "^1.0.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "preact-cli": "^3.0.0-rc.6",
     "preact-render-spy": "^1.2.1",
     "sass-loader": "^8.0.2",
-    "sirv-cli": "^0.4.5"
+    "sirv-cli": "^0.4.5",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-simple": "^1.6.1"
   },
   "dependencies": {
     "preact": "^10.3.2",

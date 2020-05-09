@@ -1,6 +1,4 @@
-import { h, Component } from 'preact';
-import { forwardRef, Fragment } from 'preact/compat';
-import { useState, useRef, useEffect, useReducer } from 'preact/hooks';
+import React, { forwardRef, Fragment, useState, useRef, useEffect, useReducer } from 'react';
 import { getUrl, handleKeypress, sendCommand } from './utils';
 
 console.log(`URL:`, getUrl());
@@ -80,16 +78,13 @@ export default function App({ send = sendCommand }) {
   const dealButton = useRef();
   const hitButton = useRef();
 
-  useEffect(
-    () => {
-      if (status === 'PLAYING') {
-        hitButton.current.focus();
-      } else {
-        dealButton.current.focus();
-      }
-    },
-    [status]
-  );
+  useEffect(() => {
+    if (status === 'PLAYING') {
+      hitButton.current.focus();
+    } else {
+      dealButton.current.focus();
+    }
+  }, [status]);
 
   useEffect(() => {
     document.addEventListener('keypress', handleKeypress);
