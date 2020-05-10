@@ -1,5 +1,5 @@
-const MINIKUBE_URL = 'http://192.168.64.2:32566/game';
-const LOCAL_URL = 'http://0.0.0.0:5000/game';
+// const MINIKUBE_URL = 'http://192.168.64.2:32566';
+const LOCAL_URL = 'http://0.0.0.0:5000';
 
 export const getUrl = () => {
   if (typeof window !== 'undefined' && window.location.search) {
@@ -8,10 +8,8 @@ export const getUrl = () => {
       return debugUrl;
     }
   }
-
-  // return process.env.MINIKUBE ? MINIKUBE_URL : LOCAL_URL;
-  const url = process.env.MINIKUBE_URL || 'http://0.0.0.:5000';
-  return `${url}/game`;
+  console.log(`process.env.MINIKUBE_URL:`, process.env.MINIKUBE_URL);
+  return `${process.env.MINIKUBE_URL || LOCAL_URL}/game`;
 };
 
 export const sendCommand = (type, balance, bet) => {
