@@ -1,0 +1,21 @@
+# Note, this is how we can send requests from the frontend
+# to the backend using only the url `/game`, without needing
+# a reverse proxy (see nginx-configmap.yml)
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: blackjack-ingress
+  namespace: blackjack
+  # annotations:
+  #   nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /game
+            backend:
+              serviceName: blackjack-backend-lb
+              servicePort: 5000
+          - backend:
+              serviceName: blackjack-frontend-lb
+              servicePort: 80

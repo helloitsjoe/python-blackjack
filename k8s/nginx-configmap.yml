@@ -1,0 +1,31 @@
+# Note: This is an alternative to `ingress.yml`, a reverse proxy to
+# route requests to `/game` to the backend LoadBalancer. This is
+# only here for reference as an aleternative, it will not be enabled
+# unless volumeMounts/volumes are enabled in `preact-frontend.yml`
+# Disable ingress in order to use this.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+data:
+  default.conf: |
+    server {
+      listen       80;
+      server_name  localhost;
+
+      location /game {
+          proxy_pass http://blackjack-backend-lb:5000/game;
+      }
+
+      location / {
+          root   /usr/share/nginx/html;
+          index  index.html index.htm;
+      }
+
+      error_page  404              /404.html;
+
+      error_page   500 502 503 504  /50x.html;
+      location = /50x.html {
+          root   /usr/share/nginx/html;
+      }
+    }

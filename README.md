@@ -29,6 +29,8 @@ Or all at once:
 kubectl apply -f .
 ```
 
+An ingress controller should be enabled. For Minikube, run `minikube addons enable ingress`
+
 ### Making changes
 
 If you make changes to a project, you'll need to do a few things to update kubernetes. For example,
@@ -46,10 +48,11 @@ Despite the `imagePullPolicy: Always` in the `deployment.yml`, it will not pull 
 restarting (`apply` is not enough)
 
 Note: `preact-frontend.yml` includes both the `service` and `deployment` for the frontend. The game
-server is split into separate service/deployment files. This is because the service port is
-hardcoded in the frontend, so when you make changes to the game you can just delete/recreate
-`deployment-python-backend.yml` and the service will continue running on the same port. (TODO:
-Combine these now that MINIKUBE_URL is an env var)
+server is split into separate service/deployment files. This is because the service port is used in
+the frontend, so when you make changes to the game you can just delete/recreate
+`deployment-python-backend.yml` and the service will continue running on the same port. If you
+recreate the `service`, you'll need to rebuild the frontend with `yarn build:minikube`, then
+build/push the frontend Docker image. (TODO: This should be unnecessary now with Ingress)
 
 ### Building for Minikube
 

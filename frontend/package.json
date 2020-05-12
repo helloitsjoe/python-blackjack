@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build:minikube": "MINIKUBE_URL=$(minikube service --url blackjack-backend-lb -n blackjack) webpack --mode=production",
+    "build:minikube": "MINIKUBE=true webpack --mode=production",
     "build:local": "webpack --mode=production",
     "watch": "webpack --mode=development --watch",
     "test": "jest"

@@ -8,8 +8,12 @@ export const getUrl = () => {
       return debugUrl;
     }
   }
-  console.log(`process.env.MINIKUBE_URL:`, process.env.MINIKUBE_URL);
-  return `${process.env.MINIKUBE_URL || LOCAL_URL}/game`;
+
+  if (process.env.MINIKUBE) {
+    return '/game';
+  }
+
+  return `${LOCAL_URL}/game`;
 };
 
 export const sendCommand = (type, balance, bet) => {

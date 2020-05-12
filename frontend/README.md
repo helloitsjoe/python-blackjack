@@ -1,3 +1,3 @@
 # Blackjack Preact Frontend
 
-See main README
+See root README
