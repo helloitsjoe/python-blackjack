@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
   flask:
-    build: ./game
+    build: ./backend
     image: helloitsjoe/blackjack-python-backend:latest
     ports:
       - '5000:5000'

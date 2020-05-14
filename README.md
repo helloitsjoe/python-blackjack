@@ -1,13 +1,14 @@
 # Python Blackjack
 
-- Game logic in `game` folder
+- Game logic in `backend` folder
 - Flask server
 - Preact frontend
 
 ## To run locally:
 
-1. `yarn watch` in `frontend` directory
-2. `python server.py` in `game` directory
+1. `python server.py` in `backend` directory
+2. `yarn watch` in `frontend` directory
+3. `open dist/index.html` in `frontend` directory
 
 ## To run in Docker:
 
@@ -29,7 +30,8 @@ Or all at once:
 kubectl apply -f .
 ```
 
-An ingress controller should be enabled. For Minikube, run `minikube addons enable ingress`
+- Enable an ingress controller, e.g. `minikube addons enable ingress`
+- Run `minikube ip` and open a browser to the IP address shown (without a port)
 
 ### Making changes
 
@@ -46,22 +48,3 @@ after making changes to `frontend`:
 
 Despite the `imagePullPolicy: Always` in the `deployment.yml`, it will not pull a new image without
 restarting (`apply` is not enough)
-
-Note: `preact-frontend.yml` includes both the `service` and `deployment` for the frontend. The game
-server is split into separate service/deployment files. This is because the service port is used in
-the frontend, so when you make changes to the game you can just delete/recreate
-`deployment-python-backend.yml` and the service will continue running on the same port. If you
-recreate the `service`, you'll need to rebuild the frontend with `yarn build:minikube`, then
-build/push the frontend Docker image. (TODO: This should be unnecessary now with Ingress)
-
-### Building for Minikube
-
-Note this line in the `build:minikube` package.json script:
-
-```
-MINIKUBE_URL=$(minikube service --url blackjack-backend-lb -n blackjack)
-```
-
-The `build:minikube` script expects minikube to be running the Flask service in a service called
-`blackjack-backend-lb`, in the `blackjack` namespace. If not found, it will fall back to
-`0.0.0.0:5000`, which will work locally but not in minikube.
