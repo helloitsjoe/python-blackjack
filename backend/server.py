@@ -19,8 +19,8 @@ def serialize_cards(cards):
 
 
 # TODO: Multiple concurrent games
-# FIXME: Global game breaks in kubernetes because sessions aren't sticky.
-# Either make sticky sessions or pass game data to remove state.
+# FIXME: Global game breaks in kubernetes because pods don't share state.
+# Either use persistent state (e.g. Redis) or pass game data between client/server.
 game = None
 
 
