@@ -4,8 +4,8 @@
 # split
 # Multiplayer
 
-from cards import Deck, Card
-from player import Player, Dealer, Statuses
+from game.cards import Deck, Card
+from game.player import Player, Dealer, Statuses
 
 
 class Game:

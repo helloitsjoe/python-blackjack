@@ -1,4 +1,4 @@
-from cards import Card
+from game.cards import Card
 
 
 def make_cards(nums):

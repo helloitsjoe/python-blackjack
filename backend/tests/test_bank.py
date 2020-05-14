@@ -1,4 +1,4 @@
-from bank import Bank
+from game.bank import Bank
 import pytest
 
 

@@ -1,4 +1,4 @@
-from bank import Bank
+from game.bank import Bank
 
 Statuses = {
     "PLAYING": "PLAYING",
@@ -13,6 +13,7 @@ Statuses = {
 
 class AbstractPlayer:
     def __init__(self, turns_remaining=10, bank=None):
+        print("Initializing player...")
         self.name = ""
         self.cards = []
         self.total = 0

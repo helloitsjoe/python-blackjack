@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request, logging
 from flask_cors import CORS
-from game import Game
-from bank import Bank
-from player import Player
+import sys
+
+from game.game import Game
+from game.bank import Bank
+from game.player import Player
 
 app = Flask(__name__)
 CORS(app)
@@ -17,6 +19,8 @@ def serialize_cards(cards):
 
 
 # TODO: Multiple concurrent games
+# FIXME: Global game breaks in kubernetes because sessions aren't sticky.
+# Either make sticky sessions or pass game data to remove state.
 game = None
 
 
@@ -29,7 +33,9 @@ def index():
         global game
         balance = json["balance"]
         player = Player(bank=Bank(balance))
+        print("Player:", player.total, flush=True)
         game = Game(player=player)
+        print("Game:", game.player.total, flush=True)
         game.start_server(bet=int(json["bet"]))
         player_cards = serialize_cards(game.player.cards)
         dealer_cards = serialize_cards(game.dealer.cards)
@@ -43,6 +49,7 @@ def index():
 
     if type == "HIT":
         card = game.player_go_remote()
+        print("Player total:", game.player.total, flush=True)
         data = {
             "card": serialize_card(card),
             "player_total": game.player.total,

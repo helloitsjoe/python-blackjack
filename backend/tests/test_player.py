@@ -1,8 +1,9 @@
-from player import AbstractPlayer, Player, Dealer, Statuses
-from cards import Card, Deck
-from bank import Bank
-from test_helpers import make_cards
+from game.player import AbstractPlayer, Player, Dealer, Statuses
+from game.cards import Card, Deck
+from game.bank import Bank
+from .test_helpers import make_cards
 import pytest
+
 
 deck_bust = [10, 6, 6]
 deck_stay = [10, 10, 2]

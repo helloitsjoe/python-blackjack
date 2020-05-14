@@ -1,8 +1,8 @@
-from game import Game
-from cards import Deck, Card
-from player import Player, Statuses
-from bank import Bank
-from test_helpers import make_cards
+from game.game import Game
+from game.cards import Deck, Card
+from game.player import Player, Statuses
+from game.bank import Bank
+from .test_helpers import make_cards
 import pytest
 
 # helper for map
