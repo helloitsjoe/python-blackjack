@@ -1,6 +1,5 @@
 # Separate service/deployment configs for backend to allow
-# updates to deployment without changing service (which updates
-# backend port and requires rebuilding/pushing frontend
+# updates to deployment without changing service
 apiVersion: apps/v1
 kind: Deployment
 metadata:

@@ -6,8 +6,9 @@ kind: Ingress
 metadata:
   name: blackjack-ingress
   namespace: blackjack
-  # annotations:
-  #   nginx.ingress.kubernetes.io/rewrite-target: /
+  annotations:
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
 spec:
   rules:
     - http:

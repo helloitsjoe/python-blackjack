@@ -23,9 +23,4 @@ const config = makeWebpackConfig({
   },
 });
 
-console.log(
-  `config.module.rules:`,
-  config.module.rules.map(rule => rule.use)
-);
-
 module.exports = config;

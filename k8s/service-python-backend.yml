@@ -1,6 +1,5 @@
 # Separate service/deployment configs for backend to allow
-# updates to deployment without changing service (which updates
-# backend port and requires rebuilding/pushing frontend
+# updates to deployment without changing service
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,7 +8,6 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    # Note: this port works as either 80 or 5000... but why?
     - port: 5000
       protocol: TCP
       targetPort: 5000
