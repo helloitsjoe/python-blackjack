@@ -1,4 +1,5 @@
 import random
+import json
 
 
 class Card:
@@ -34,6 +35,14 @@ class Card:
             13: "K",
         }
         self.__face = faces.get(num, num)
+
+    def toJSON(self):
+        return {
+            "num": self.num,
+            "value": self.value,
+            "face": self.face,
+            "suit": self.suit,
+        }
 
 
 class Deck:

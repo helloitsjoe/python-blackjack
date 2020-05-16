@@ -12,10 +12,10 @@ Statuses = {
 
 
 class AbstractPlayer:
-    def __init__(self, turns_remaining=10, bank=None):
+    def __init__(self, turns_remaining=10, bank=None, cards=None):
         print("Initializing player...")
         self.name = ""
-        self.cards = []
+        self.cards = cards or []
         self.total = 0
         self.status = Statuses["PLAYING"]
         self.turns_remaining = turns_remaining

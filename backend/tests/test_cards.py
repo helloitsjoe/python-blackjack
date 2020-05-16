@@ -14,6 +14,15 @@ def test_cards_are_Cards():
         assert isinstance(card, Card)
 
 
+def test_toJSON():
+    json = Card(5).toJSON()
+    print(json)
+    assert json["num"] == 5
+    assert json["face"] == 5
+    assert json["value"] == 5
+    assert "suit" in json
+
+
 def test_shuffle():
     deck = Deck()
     deck.create_deck()
