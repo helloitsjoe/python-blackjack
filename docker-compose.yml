@@ -3,7 +3,10 @@ version: '3.2'
 services:
   flask:
     build: ./backend
-    image: helloitsjoe/blackjack-python-backend:latest
+    # image: helloitsjoe/blackjack-python-backend:latest
+    volumes:
+      - ./backend/server:/app/server
+      - ./backend/game:/app/game
     ports:
       - '5000:5000'
 
