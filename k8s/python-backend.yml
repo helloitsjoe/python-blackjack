@@ -1,5 +1,18 @@
-# Separate service/deployment configs for backend to allow
-# updates to deployment without changing service
+apiVersion: v1
+kind: Service
+metadata:
+  name: blackjack-backend-lb
+  namespace: blackjack
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 5000
+      protocol: TCP
+      targetPort: 5000
+  selector:
+    app: blackjack-python-backend
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
