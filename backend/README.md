@@ -1,3 +1,5 @@
 # Python Blackjack
 
-To run all tests in watch mode, run `python watcher.py`
+See main README for info.
+
+To run all tests in watch mode, run `cd tests && python watch_tests.py`

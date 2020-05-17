@@ -1,3 +1,5 @@
 # Blackjack Preact Frontend
 
-See root README
+See main README.
+
+To run tests in watch mode, run `yarn test --watch`
