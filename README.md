@@ -1,14 +1,24 @@
-# Python Blackjack
+# Kubernetes Blackjack
 
-- Game logic in `backend` folder
-- Flask server
+- Flask server with game logic
 - Preact frontend
 
-## To run locally:
+## To run in Minikube:
 
-1. `python server.py` in `backend` directory
-2. `yarn watch` in `frontend` directory
-3. `open dist/index.html` in `frontend` directory
+1. All service and deployment `yml` files are in the `k8s` directory. Either run them all:
+
+```
+kubectl apply -f .
+```
+
+Or individually:
+
+```
+kubectl apply -f <service or deployment>.yml
+```
+
+2. Enable an ingress controller, e.g. `minikube addons enable ingress`
+3. Run `minikube ip` and open a browser to the IP address shown (without a port)
 
 ## To run in Docker:
 
@@ -16,35 +26,24 @@
 2. `docker-compose up --build` in root
 3. Open `localhost` in a browser
 
-## Kubernetes
+## To run locally:
 
-All service and deployment `yml` files are in the `k8s` directory. Either run them individually:
-
-```
-kubectl apply -f <service or deployment>.yml
-```
-
-Or all at once:
-
-```
-kubectl apply -f .
-```
-
-- Enable an ingress controller, e.g. `minikube addons enable ingress`
-- Run `minikube ip` and open a browser to the IP address shown (without a port)
+1. `python server.py` in `backend` directory
+2. `yarn watch` in `frontend` directory
+3. `open dist/index.html` in `frontend` directory
 
 ### Making changes
 
 If you make changes to a project, you'll need to do a few things to update kubernetes. For example,
 after making changes to `frontend`:
 
-1. Rebuild from `src`: `yarn build:minikube` (within the `frontend` directory)
+1. In the `frontend` directory, rebuild from `src`: `yarn build:minikube`
 2. Rebuild docker image: `docker build -t helloitsjoe/blackjack-preact-frontend:minikube .` (Note
    the `.`)
 3. Push to docker hub: `docker push helloitsjoe/blackjack-preact-frontend:minikube`
-4. In the `k8s` directory, bring down the running kubernetes pods for the frontend:
-   `kubectl delete -f preact-frontend.yml`
-5. Restart them: `kubectl apply -f preact-frontend.yml`
-
-Despite the `imagePullPolicy: Always` in the `deployment.yml`, it will not pull a new image without
+4. Despite the `imagePullPolicy: Always` in the `deployment.yml`, it will not pull a new image without
 restarting (`apply` is not enough)
+5. In the `k8s` directory, bring down the running kubernetes pods for the frontend:
+   `kubectl delete -f preact-frontend.yml`
+6. Restart them: `kubectl apply -f preact-frontend.yml`
+
