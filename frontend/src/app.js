@@ -22,22 +22,25 @@ const getTotal = cards => cards.reduce((acc, curr) => acc + curr.value, 0);
 const hide = cards => [{ ...cards[0], value: 0, face: '', suit: '' }, ...cards.slice(1)];
 
 const gameReducer = (s, a) => {
-  console.log(`data:`, a.data);
+  // console.log(`data:`, a.data);
+  // Note: Totals come from backend to account for aces
   const {
     player_cards: playerCards,
-    player_total: playerTotal,
     dealer_cards: dealerCards,
+    player_total: playerTotal,
     dealer_total: dealerTotal,
-    card,
     status,
     balance,
+    deck,
   } = a.data;
+
+  const hiddenDealer = hide(dealerCards);
 
   switch (a.type) {
     case DEAL: {
-      const hiddenDealer = hide(dealerCards);
       return {
         ...s,
+        deck,
         playerCards,
         playerTotal,
         dealerCards: hiddenDealer,
@@ -47,14 +50,30 @@ const gameReducer = (s, a) => {
       };
     }
     case HIT: {
-      return { ...s, playerCards: [...s.playerCards, card], playerTotal, status };
+      return {
+        ...s,
+        playerCards,
+        dealerCards: status === 'PLAYING' ? hiddenDealer : dealerCards,
+        dealerTotal: status === 'PLAYING' ? getTotal(hiddenDealer) : dealerTotal,
+        playerTotal,
+        status,
+        deck,
+      };
     }
     case STAY: {
-      return { ...s, dealerCards, dealerTotal, balance, status };
+      return { ...s, dealerCards, dealerTotal, balance, status, deck };
     }
     case DOUBLE: {
-      const playerCards = [...s.playerCards, card];
-      return { ...s, playerCards, dealerCards, dealerTotal, playerTotal, balance, status };
+      return {
+        ...s,
+        playerCards,
+        dealerCards,
+        dealerTotal,
+        playerTotal,
+        balance,
+        status,
+        deck,
+      };
     }
     default:
       return s;
@@ -63,7 +82,7 @@ const gameReducer = (s, a) => {
 
 export default function App({ send = sendCommand }) {
   const [
-    { playerCards, playerTotal, dealerCards, dealerTotal, status, balance, bet },
+    { playerCards, playerTotal, dealerCards, dealerTotal, status, balance, bet, deck },
     dispatch,
   ] = useReducer(gameReducer, {
     playerCards: [],
@@ -91,36 +110,33 @@ export default function App({ send = sendCommand }) {
     return () => document.removeEventListener('keypress', handleKeypress);
   }, []);
 
-  const deal = () =>
-    send(DEAL, balance, bet).then(data => {
+  const deal = e => {
+    e.preventDefault();
+    return send({ type: DEAL, balance, bet }).then(data => {
       dispatch({ type: DEAL, data });
     });
+  };
 
   const hit = () =>
-    send(HIT).then(data => {
+    send({ type: HIT, balance, bet, playerCards, dealerCards, deck }).then(data => {
       dispatch({ type: HIT, data });
     });
 
   const stay = () =>
-    send(STAY).then(data => {
+    send({ type: STAY, balance, bet, playerCards, dealerCards, deck }).then(data => {
       dispatch({ type: STAY, data });
     });
 
   const doubleDown = () =>
-    send(DOUBLE).then(data => {
+    send({ type: DOUBLE, balance, bet, playerCards, dealerCards, deck }).then(data => {
       dispatch({ type: DOUBLE, data });
     });
-
-  const changeBet = e => {
-    e.preventDefault();
-    deal();
-  };
 
   return (
     <div className="app">
       <div className="controls">
         <h2>${balance}</h2>
-        <form onSubmit={changeBet}>
+        <form onSubmit={deal}>
           <label className="controls-bet">
             <span>Bet: $</span>
             <input
@@ -182,7 +198,7 @@ function Cards({ cards }) {
   );
 }
 
-function Card({ face = 'King', suit = 'Clubs' }) {
+function Card({ face = 'King', suit = 'clubs' }) {
   const color = {
     clubs: 'black',
     spades: 'black',
