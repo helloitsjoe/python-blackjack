@@ -12,25 +12,19 @@ class Game:
     # Gotcha: In python, default args are evaluated when the module
     # is evaluated, NOT at runtime. Default args will be mutated!
     def __init__(self, deck=None, player=None, dealer=None):
-        self.deck = deck or Deck()
+        self.deck = deck or Deck(shuffle=True)
         self.player = player or Player()
         self.dealer = dealer or Dealer()
 
-    def init_deck(self):
-        self.deck.shuffle()
-
     def start(self):
         # self.player.prompt_name()
-        self.init_deck()
         self.deal_player()
         self.deal_dealer()
         self.player_go()
         self.dealer_go()
 
-    def start_server(self, bet=0, shuffle=True):
-        if shuffle:
-            self.init_deck()
-        self.deal_player(bet)
+    def start_server(self):
+        self.deal_player()
         self.deal_dealer()
 
     def player_go(self):

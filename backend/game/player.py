@@ -1,4 +1,5 @@
 from game.bank import Bank
+from game.cards import Card
 
 Statuses = {
     "PLAYING": "PLAYING",
@@ -11,16 +12,28 @@ Statuses = {
 }
 
 
+def validate_cards(cards):
+    if cards is None:
+        return
+    if not isinstance(cards, list) or not all(isinstance(card, Card) for card in cards):
+        raise Exception("Cards must be a list of type Card")
+
+
 class AbstractPlayer:
-    def __init__(self, turns_remaining=10, bank=None, cards=None):
-        print("Initializing player...")
+    def __init__(self, turns_remaining=10, bank=None, cards=None, bet=None):
+        validate_cards(cards)
+
+        bank = bank or Bank(1000)
+        bet = bet or 0
+        bank.withdraw(bet)
+
         self.name = ""
         self.cards = cards or []
-        self.total = 0
+        self.total = self.get_total()
         self.status = Statuses["PLAYING"]
         self.turns_remaining = turns_remaining
-        self._bank = bank or Bank(1000)
-        self.bet_amount = 0
+        self.bet_amount = bet
+        self._bank = bank
 
     @property
     def balance(self):
@@ -36,19 +49,24 @@ class AbstractPlayer:
         self._bank.deposit(amount)
 
     def add_card(self, card):
+        print("card", card)
         self.cards.append(card)
-        self.total = 0
+        self.total = self.get_total()
+        self.check_score()
+        return card
+
+    def get_total(self):
+        total = 0
         for card in self.cards:
-            self.total += card.value
+            total += card.value
 
         # Handle aces
         for card in self.cards:
-            if self.total > 21 and card.value == 11:
+            if total > 21 and card.value == 11:
                 card.value = 1
-                self.total -= 10
+                total -= 10
 
-        self.check_score()
-        return card
+        return total
 
     def double_down(self, card):
         self.bet(self.bet_amount)

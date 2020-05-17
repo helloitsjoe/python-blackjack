@@ -5,14 +5,19 @@ import json
 class Card:
     def __init__(self, num):
         suits = ["clubs", "diamonds", "hearts", "spades"]
-        self.num = num % 13 or 13
+        self.num = num
+
+        suit_num = num % 13 or 13
+
         self.suit = suits[num % 4]
-        self.value = self.num
-        self.face = self.num
+        self.value = suit_num
+        self.face = suit_num
 
     def __repr__(self):
         return f"""{self.face} of {self.suit}"""
 
+    # This is an example of setters/getters.
+    # Not necessary, but a useful example.
     @property
     def value(self):
         return self.__value
@@ -27,7 +32,6 @@ class Card:
 
     @face.setter
     def face(self, num):
-        # TODO: Account for Ace being 11 and refactor face cards
         faces = {
             1: "A",
             11: "J",
@@ -46,11 +50,19 @@ class Card:
 
 
 class Deck:
-    def __init__(self, cards=None):
-        if not cards:
-            cards = self.create_deck()
+    def __init__(self, card_nums=None, shuffle=False):
 
-        self.cards = cards
+        self.cards = (
+            list(map(lambda num: Card(num), card_nums))
+            if card_nums
+            else self.create_deck()
+        )
+
+        if shuffle:
+            self.cards = random.sample(self.cards, len(self.cards))
+
+        print("cards:", self.cards)
+        # self.cards = cards
 
     def create_deck(self):
         cards = []
@@ -62,5 +74,4 @@ class Deck:
         card = self.cards.pop()
         return card
 
-    def shuffle(self):
-        self.cards = random.sample(self.cards, len(self.cards))
+    # def toJSON(self):

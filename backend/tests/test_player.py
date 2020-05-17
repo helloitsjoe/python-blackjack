@@ -1,13 +1,14 @@
 from game.player import AbstractPlayer, Player, Dealer, Statuses
 from game.cards import Card, Deck
 from game.bank import Bank
+import server
 from .test_helpers import make_cards
 import pytest
 
 
-deck_bust = [10, 6, 6]
-deck_stay = [10, 10, 2]
-deck_hit = [10, 6]
+deck_bust = [6, 6, 10]
+deck_stay = [2, 10, 10]
+deck_hit = [6, 10]
 
 
 def test_abstract_player():
@@ -20,13 +21,36 @@ class TestBank:
     def test_bet_withdraws(self):
         player = Player()
         assert player.balance == 1000
-        player.bet(25)
-        assert player.balance == 975
+        player2 = Player(bet=25)
+        assert player2.balance == 975
 
     def test_win_deposits(self):
         player = Player(bank=Bank(10))
         player.win(5)
         assert player.balance == 15
+
+
+def test_card_validation():
+    with pytest.raises(Exception, match="Cards must be a list of type Card"):
+        Player(cards=[1])
+    with pytest.raises(Exception, match="Cards must be a list of type Card"):
+        cards = server.serialize_cards(make_cards([1, 2]))
+        Player(cards=cards)
+    with pytest.raises(Exception, match="Cards must be a list of type Card"):
+        Player(cards=Card(1))
+
+
+def test_cards():
+    # No cards should make empty list
+    assert Player().cards == []
+    assert Dealer().cards == []
+
+    # Provided cards should be set on player
+    actual_cards = make_cards([4, 5])
+    player = Player(cards=actual_cards)
+    dealer = Dealer(cards=actual_cards)
+    assert player.cards == actual_cards
+    assert dealer.cards == actual_cards
 
 
 def test_status_playing():
@@ -63,16 +87,16 @@ def test_status_bust():
 
 def test_dealer_bust():
     dealer = Dealer()
-    cards = make_cards(deck_bust)
-    dealer.play_turn(Deck(cards=cards))
+    # cards = make_cards(deck_bust)
+    dealer.play_turn(Deck(card_nums=deck_bust))
     assert dealer.status == Statuses["BUST"]
     assert dealer.total == 22
 
 
 def test_dealer_stay():
     dealer = Dealer()
-    cards = make_cards(deck_stay)
-    dealer.play_turn(Deck(cards=cards))
+    # cards = make_cards(deck_stay)
+    dealer.play_turn(Deck(card_nums=deck_stay))
     assert dealer.status == Statuses["PLAYING"]
     assert dealer.total == 20
 

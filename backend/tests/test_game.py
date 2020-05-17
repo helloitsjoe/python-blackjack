@@ -17,9 +17,8 @@ def test_has_deck():
 
 def test_deck_shuffled():
     game = Game()
-    game.init_deck()
 
-    deck = Deck()
+    deck = Deck(shuffle=False)
     game_cards = list(map(get_nums, game.deck.cards))
     deck_cards = list(map(get_nums, deck.cards))
     assert game_cards != deck_cards
@@ -27,7 +26,6 @@ def test_deck_shuffled():
 
 def test_deal_player():
     game = Game()
-    game.init_deck()
     game.deal_player()
 
     assert len(game.player.cards) == 2
@@ -36,7 +34,6 @@ def test_deal_player():
 
 def test_deal_dealer():
     game = Game()
-    game.init_deck()
     game.deal_dealer()
 
     assert len(game.dealer.cards) == 2
@@ -66,9 +63,9 @@ def test_player_turn(monkeypatch, input, expected):
 
 class TestBet:
     def test_player_bet(self):
-        player = Player(bank=Bank(10))
-        game = Game(player=player, deck=Deck(cards=make_cards([10, 10, 10, 10, 10])))
-        game.start_server(bet=5)
+        player = Player(bank=Bank(10),bet=5)
+        game = Game(player=player, deck=Deck(card_nums=[10, 10, 10, 10, 10]))
+        game.start_server()
         assert player.balance == 5
         assert player.total == 20
         game.player_go_remote()
@@ -77,10 +74,9 @@ class TestBet:
         assert player.balance == 5
 
     def test_player_win(self):
-        player = Player(bank=Bank(10))
-        # TODO: Why is order not deterministic?
-        game = Game(player=player, deck=Deck(cards=make_cards([10, 10, 10, 9])))
-        game.start_server(bet=5, shuffle=False)
+        player = Player(bank=Bank(10), bet=5)
+        game = Game(player=player, deck=Deck(card_nums=[10, 9, 10, 10]))
+        game.start_server()
         assert player.balance == 5
         assert player.total == 20
         game.dealer_go()
@@ -88,9 +84,9 @@ class TestBet:
         assert player.balance == 15
 
     def test_player_blackjack(self):
-        player = Player(bank=Bank(10))
-        game = Game(player=player, deck=Deck(cards=make_cards([10, 1, 10, 9])))
-        game.start_server(bet=5, shuffle=False)
+        player = Player(bank=Bank(10), bet=5)
+        game = Game(player=player, deck=Deck(card_nums=[10, 9, 10, 1]))
+        game.start_server()
         assert player.balance == 5
         assert player.total == 21
         game.dealer_go()
@@ -98,9 +94,9 @@ class TestBet:
         assert player.balance == 17.5
 
     def test_tie(self):
-        player = Player(bank=Bank(10))
-        game = Game(player=player, deck=Deck(cards=make_cards([10, 9, 10, 9])))
-        game.start_server(bet=5, shuffle=False)
+        player = Player(bank=Bank(10), bet=5)
+        game = Game(player=player, deck=Deck(card_nums=[10, 9, 10, 9]))
+        game.start_server()
         assert player.balance == 5
         assert player.total == 19
         game.dealer_go()
@@ -108,10 +104,10 @@ class TestBet:
         assert player.balance == 10
 
     def test_double_down(self):
-        player = Player(bank=Bank(10))
-        deck = Deck(cards=make_cards([5, 5, 10, 9, 10]))
+        player = Player(bank=Bank(10), bet=5)
+        deck = Deck(card_nums=[10, 9, 10, 5, 5])
         game = Game(player=player, deck=deck)
-        game.start_server(bet=5, shuffle=False)
+        game.start_server()
         assert player.balance == 5
         assert player.total == 10
         player.double_down(deck.deal_one())
