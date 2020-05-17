@@ -10,18 +10,20 @@ def client():
         yield client
 
 
-# TODO: Move this test to the end, hit/stay/double should work without having dealt
 def test_deal(client):
     result = client.post("/game", json={"type": "DEAL", "bet": 5, "balance": 100})
     data = result.get_json()["data"]
     assert "player_cards" in data
     assert "dealer_cards" in data
     assert "status" in data
-    assert "balance" in data
+    # If gameplay is updated to win on BLACKJACK after deal, this test
+    # becomes nondeterministic. One solution is include Deck in deal
+    assert data["balance"] == 95
     assert len(data["deck"]) > 0
     assert type(data["player_total"]) == int
     assert type(data["dealer_total"]) == int
-    assert all(type(num) == int for num in data["deck"])
+    for num in data["deck"]:
+        assert type(num) == int
 
 
 def test_hit(client):
@@ -49,15 +51,13 @@ def test_hit(client):
     assert data["dealer_cards"] == dealer_cards
     assert data["player_total"] == 17
     assert data["dealer_total"] == 13
-    # TODO: Not sure balance/bet is needed
-    # assert "balance" in data
-    # assert "bet" in data
+    assert data["balance"] == 95
 
 
 def test_stay(client):
     player_cards = server.serialize_cards(make_cards([4, 5]))
     dealer_cards = server.serialize_cards(make_cards([6, 7]))
-    deck = [9, 8]
+    deck = [8, 9]
 
     result = client.post(
         "/game",
@@ -72,16 +72,14 @@ def test_stay(client):
     )
     data = result.get_json()["data"]
 
-    assert data["deck"] == [9]
-    assert data["status"] == "LOSE"
+    assert data["deck"] == [8]
+    assert data["status"] == "WIN"
     assert data["player_cards"] == player_cards
-    assert data["dealer_cards"] == server.serialize_cards(make_cards([6, 7, 8]))
+    assert data["dealer_cards"] == server.serialize_cards(make_cards([6, 7, 9]))
     assert data["player_total"] == 9
-    assert data["dealer_total"] == 21
-    assert data["balance"] == 90
-    # TODO: Not sure balance/bet is needed
-    # assert "balance" in data
-    # assert "bet" in data
+    assert data["dealer_total"] == 22
+    # Should win double original bet
+    assert data["balance"] == 105
 
 
 def test_double_down(client):
@@ -108,7 +106,7 @@ def test_double_down(client):
     assert data["dealer_cards"] == server.serialize_cards(make_cards([6, 7, 9]))
     assert data["player_total"] == 17
     assert data["dealer_total"] == 22
-    assert data["balance"] == 105
+    assert data["balance"] == 110
 
 
 def test_validate_integration(client):

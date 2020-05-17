@@ -51,7 +51,6 @@ class Card:
 
 class Deck:
     def __init__(self, card_nums=None, shuffle=False):
-
         self.cards = (
             list(map(lambda num: Card(num), card_nums))
             if card_nums
@@ -60,9 +59,6 @@ class Deck:
 
         if shuffle:
             self.cards = random.sample(self.cards, len(self.cards))
-
-        print("cards:", self.cards)
-        # self.cards = cards
 
     def create_deck(self):
         cards = []

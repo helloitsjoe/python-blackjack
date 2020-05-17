@@ -44,8 +44,8 @@ class Game:
         self.end_game()
         return self.dealer.cards
 
-    def deal_player(self, bet=0):
-        self.player.bet(bet)
+    def deal_player(self):
+        self.player.bet()
         self.player.add_card(self.deck.deal_one())
         self.player.add_card(self.deck.deal_one())
 
@@ -79,6 +79,7 @@ class Game:
             self.player.status = Statuses["TIE"]
             self.player.win(self.player.bet_amount)
             print("YOU TIE!")
+        print("Balance:", self.player.balance, flush=True)
 
 
 if __name__ == "__main__":

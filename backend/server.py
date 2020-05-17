@@ -78,7 +78,6 @@ def validate_body(body):
 
 @app.route("/game", methods=["POST"])
 def index():
-    print("HI", flush=True)
     json = request.get_json()
 
     validate_body(json)
@@ -87,7 +86,7 @@ def index():
     print(type, flush=True)
 
     if type == "DEAL":
-        player = Player(bank=Bank(json["balance"]), bet=int(json["bet"]))
+        player = Player(bank=Bank(json["balance"]), bet_amount=int(json["bet"]))
         game = Game(player=player)
         game.start_server()
         player_cards = serialize_cards(game.player.cards)
@@ -110,7 +109,9 @@ def index():
     player_cards = deserialize_cards(json["player_cards"])
     dealer_cards = deserialize_cards(json["dealer_cards"])
     deck = Deck(json["deck"])
-    player = Player(bank=Bank(json["balance"]), bet=json["bet"], cards=player_cards)
+    player = Player(
+        bank=Bank(json["balance"]), bet_amount=json["bet"], cards=player_cards
+    )
     dealer = Dealer(cards=dealer_cards)
     game = Game(player=player, dealer=dealer, deck=deck)
 

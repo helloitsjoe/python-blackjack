@@ -41,11 +41,11 @@ const gameReducer = (s, a) => {
       return {
         ...s,
         deck,
+        balance,
         playerCards,
         playerTotal,
         dealerCards: hiddenDealer,
         dealerTotal: getTotal(hiddenDealer),
-        balance: s.balance - s.bet,
         status: 'PLAYING',
       };
     }
@@ -56,6 +56,7 @@ const gameReducer = (s, a) => {
         dealerCards: status === 'PLAYING' ? hiddenDealer : dealerCards,
         dealerTotal: status === 'PLAYING' ? getTotal(hiddenDealer) : dealerTotal,
         playerTotal,
+        balance,
         status,
         deck,
       };

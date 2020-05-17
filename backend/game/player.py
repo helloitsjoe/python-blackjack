@@ -20,19 +20,20 @@ def validate_cards(cards):
 
 
 class AbstractPlayer:
-    def __init__(self, turns_remaining=10, bank=None, cards=None, bet=None):
+    def __init__(self, turns_remaining=10, bank=None, cards=None, bet_amount=None):
         validate_cards(cards)
 
         bank = bank or Bank(1000)
-        bet = bet or 0
-        bank.withdraw(bet)
+        # bet = bet or 0
+        # print("Withdrawing", bet, "dollars")
+        # bank.withdraw(bet)
 
         self.name = ""
         self.cards = cards or []
         self.total = self.get_total()
         self.status = Statuses["PLAYING"]
         self.turns_remaining = turns_remaining
-        self.bet_amount = bet
+        self.bet_amount = bet_amount or 0
         self._bank = bank
 
     @property
@@ -42,10 +43,12 @@ class AbstractPlayer:
     def prompt_name(self):
         self.name = input("Enter your name: ")
 
-    def bet(self, amount):
-        self.bet_amount += self._bank.withdraw(amount)
+    def bet(self, amount=None):
+        # self.bet_amount += self._bank.withdraw(amount)
+        self._bank.withdraw(amount or self.bet_amount)
 
     def win(self, amount):
+        print("Depositing", amount, "dollars")
         self._bank.deposit(amount)
 
     def add_card(self, card):
@@ -69,7 +72,8 @@ class AbstractPlayer:
         return total
 
     def double_down(self, card):
-        self.bet(self.bet_amount)
+        self.bet()
+        self.bet_amount *= 2
         return self.add_card(card)
 
     def check_score(self):

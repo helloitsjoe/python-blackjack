@@ -21,8 +21,18 @@ class TestBank:
     def test_bet_withdraws(self):
         player = Player()
         assert player.balance == 1000
-        player2 = Player(bet=25)
-        assert player2.balance == 975
+        player.bet()
+        assert player.balance == 1000
+
+        player2 = Player(bet_amount=50)
+        assert player2.balance == 1000
+        player2.bet()
+        assert player2.balance == 950
+
+        player = Player()
+        assert player.balance == 1000
+        player.bet(50)
+        assert player.balance == 950
 
     def test_win_deposits(self):
         player = Player(bank=Bank(10))
