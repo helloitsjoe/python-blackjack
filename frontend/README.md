@@ -2,4 +2,7 @@
 
 See main README.
 
-To run tests in watch mode, run `yarn test --watch`
+To run tests in watch mode, run
+```
+yarn test --watch
+```
