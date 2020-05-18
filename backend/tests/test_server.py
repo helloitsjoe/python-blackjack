@@ -112,6 +112,7 @@ def test_double_down(client):
 def test_validate_integration(client):
     result = client.post("/game")
     json = result.get_json()
+
     assert json["status_code"] == 400
     assert json["message"] == "body is required"
 

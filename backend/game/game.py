@@ -1,6 +1,6 @@
 # TODO:
 # Restart deck if all cards are dealt
-# Betting (non-server)
+# Remove non-server methods
 # split
 # Multiplayer
 

@@ -72,8 +72,9 @@ def validate_body(body):
         raise Exception("deck is required to be a list of numbers")
 
 
-# TODO: Multiple concurrent games
-# TODO: Deck state in Redis
+# TODO: Multiple players/hands
+# TODO: balance, bet, and deck can be persisted in another
+# service instead of sending back and forth to client
 
 
 @app.route("/game", methods=["POST"])
@@ -102,9 +103,6 @@ def index():
             "deck": get_card_nums(game.deck.cards),
         }
         return jsonify(data=data)
-
-    # TODO: balance, bet, and deck can be persisted in another
-    # service instead of sending back and forth to client
 
     player_cards = deserialize_cards(json["player_cards"])
     dealer_cards = deserialize_cards(json["dealer_cards"])

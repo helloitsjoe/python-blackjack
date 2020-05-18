@@ -16,17 +16,17 @@ export const getUrl = () => {
   return `${LOCAL_URL}/game`;
 };
 
-export const sendCommand = ({ type, balance, bet, playerCards, dealerCards, deck }) => {
+export const sendCommand = ({
+  type,
+  balance,
+  bet,
+  playerCards: player_cards,
+  dealerCards: dealer_cards,
+  deck,
+}) => {
   return fetch(getUrl(), {
     method: 'POST',
-    body: JSON.stringify({
-      type,
-      balance,
-      bet,
-      player_cards: playerCards,
-      dealer_cards: dealerCards,
-      deck,
-    }),
+    body: JSON.stringify({ type, balance, bet, player_cards, dealer_cards, deck }),
     headers: { 'Content-Type': 'application/json' },
   })
     .then(res => res.json())

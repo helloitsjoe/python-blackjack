@@ -22,7 +22,6 @@ const getTotal = cards => cards.reduce((acc, curr) => acc + curr.value, 0);
 const hide = cards => [{ ...cards[0], value: 0, face: '', suit: '' }, ...cards.slice(1)];
 
 const gameReducer = (s, a) => {
-  // console.log(`data:`, a.data);
   // Note: Totals come from backend to account for aces
   const {
     player_cards: playerCards,
@@ -61,9 +60,7 @@ const gameReducer = (s, a) => {
         deck,
       };
     }
-    case STAY: {
-      return { ...s, dealerCards, dealerTotal, balance, status, deck };
-    }
+    case STAY:
     case DOUBLE: {
       return {
         ...s,
