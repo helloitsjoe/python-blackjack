@@ -9,17 +9,15 @@
 ```
 minikube status
 ```
-2. In the `k8s` directory:
+2. In the `k8s` directory, create services/deployments:
 ```
 kubectl apply -f .
 ```
-This will run all service/deployments. To run them individually, run `kubectl apply -f <service or deployment>.yml`
-
-3. Enable an ingress controller. Minikube provides one:
+3. Enable an ingress controller:
 ```
 minikube addons enable ingress
 ```
-4. Open a browser to the minikube IP. You can find it by running:
+4. Open a browser to the minikube IP address. You can find it by running:
 ```
 minikube ip
 ```
