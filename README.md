@@ -5,21 +5,24 @@
 
 ## To run in Minikube:
 
-1. Make sure minikube is running: `minikube status`
-2. All service and deployment `yml` files are in the `k8s` directory. Either run them all:
-
+1. Make sure minikube is running: 
+```
+minikube status
+```
+2. In the `k8s` directory:
 ```
 kubectl apply -f .
 ```
+This will run all service/deployments. To run them individually, run `kubectl apply -f <service or deployment>.yml`
 
-Or individually:
-
+3. Enable an ingress controller. Minikube provides one:
 ```
-kubectl apply -f <service or deployment>.yml
+minikube addons enable ingress
 ```
-
-3. Enable an ingress controller, e.g. `minikube addons enable ingress`
-4. Run `minikube ip` and open a browser to the IP address shown
+4. Open a browser to the minikube IP. You can find it by running:
+```
+minikube ip
+```
 
 ## To run in Docker:
 
