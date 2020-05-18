@@ -17,7 +17,7 @@ class Card:
         return f"""{self.face} of {self.suit}"""
 
     # This is an example of setters/getters.
-    # Not necessary, but a useful example.
+    # Not really necessary, but a useful example.
     @property
     def value(self):
         return self.__value
@@ -40,6 +40,8 @@ class Card:
         }
         self.__face = faces.get(num, num)
 
+    # Note: This is only necessary because of the setters/getters
+    # If those were normal properties this could just be `self.__dict__`
     def toJSON(self):
         return {
             "num": self.num,
@@ -69,5 +71,3 @@ class Deck:
     def deal_one(self):
         card = self.cards.pop()
         return card
-
-    # def toJSON(self):
