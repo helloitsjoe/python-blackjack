@@ -2,6 +2,10 @@ import random
 import json
 
 
+def make_cards(nums):
+    return list(map(lambda num: Card(num), nums))
+
+
 class Card:
     def __init__(self, num):
         suits = ["clubs", "diamonds", "hearts", "spades"]

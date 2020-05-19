@@ -1,8 +1,7 @@
 from game.game import Game
-from game.cards import Deck, Card
+from game.cards import Deck, Card, make_cards
 from game.player import Player, Statuses
 from game.bank import Bank
-from .test_helpers import make_cards
 import pytest
 
 # helper for map
@@ -122,10 +121,7 @@ class TestBet:
 
     # def test_split(self):
     #     player = Player(bank=Bank(10))
-    #     game = Game(player=player, deck=Deck(cards=make_cards([10, 9, 10, 9])))
+    #     deck = Deck(cards=make_cards([10, 9, 10, 9]))
+    #     game = Game(player=player, deck=deck)
     #     game.start_server(bet=5, shuffle=False)
-    #     assert player.balance == 5
-    #     assert player.total == 19
-    #     game.dealer_go()
-    #     assert player.status == Statuses["TIE"]
-    #     assert player.balance == 10
+    #     ...

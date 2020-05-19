@@ -1,8 +1,7 @@
 from game.player import AbstractPlayer, Player, Dealer, Statuses
-from game.cards import Card, Deck
+from game.cards import Card, Deck, make_cards
 from game.bank import Bank
-import server
-from .test_helpers import make_cards
+from routes import index
 import pytest
 
 
@@ -44,7 +43,7 @@ def test_card_validation():
     with pytest.raises(Exception, match="Cards must be a list of type Card"):
         Player(cards=[1])
     with pytest.raises(Exception, match="Cards must be a list of type Card"):
-        cards = server.serialize_cards(make_cards([1, 2]))
+        cards = index.serialize_cards(make_cards([1, 2]))
         Player(cards=cards)
     with pytest.raises(Exception, match="Cards must be a list of type Card"):
         Player(cards=Card(1))
