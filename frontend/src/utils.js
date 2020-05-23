@@ -9,11 +9,11 @@ export const getUrl = () => {
     }
   }
 
-  if (process.env.MINIKUBE) {
-    return '/game';
+  if (process.env.LOCAL) {
+    return `${LOCAL_URL}/game`;
   }
 
-  return `${LOCAL_URL}/game`;
+  return '/game';
 };
 
 export const sendCommand = ({
