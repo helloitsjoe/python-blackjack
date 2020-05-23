@@ -5,14 +5,16 @@ services:
     build: ./backend
     # image: helloitsjoe/blackjack-python-backend:latest
     volumes:
-      - ./backend/server:/app/server
-      - ./backend/game:/app/game
+      - ./backend:/app
     ports:
       - '5000:5000'
 
   frontend:
-    build: ./frontend
     # image: helloitsjoe/blackjack-preact-frontend:latest
+    build:
+      context: ./frontend
+      # args:
+      #   LOCAL: 'true'
     volumes:
       - ./frontend/dist:/usr/share/nginx/html
     ports:
