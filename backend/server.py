@@ -17,6 +17,7 @@ def play():
 @app.errorhandler(Exception)
 def handle_invalid_usage(err):
     message = getattr(err, "message", str(err))
+    print("ERROR MESSAGE:", message, flush=True)
     return jsonify({"message": message, "status_code": 400})
     # Is jsonify is the best thing to use here? I'm unclear how it differs from:
     # return message, 400

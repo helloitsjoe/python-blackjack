@@ -32,7 +32,7 @@ export const sendCommand = ({
     .then(res => res.json())
     .then(j => {
       if (j.message) {
-        throw new Error(j.message);
+        throw new Error(`(on backend) ${j.message}`);
       }
       console.log(j.data);
       return j.data || j;
