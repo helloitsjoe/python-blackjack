@@ -13,8 +13,8 @@ services:
     # image: helloitsjoe/blackjack-preact-frontend:latest
     build:
       context: ./frontend
-      # args:
-      #   LOCAL: 'true'
+      args:
+        LOCAL: 'true'
     volumes:
       - ./frontend/dist:/usr/share/nginx/html
     ports:
