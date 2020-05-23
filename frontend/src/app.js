@@ -146,10 +146,10 @@ export default function App({ send = sendCommand }) {
             />
           </label>
         </form>
-        <Button onClick={deal} ref={dealButton}>
+        <Button disabled={status === 'PLAYING'} onClick={deal} ref={dealButton}>
           Deal
         </Button>
-        <Button ref={hitButton} disabled={status !== 'PLAYING'} onClick={hit}>
+        <Button disabled={status !== 'PLAYING'} onClick={hit} ref={hitButton}>
           Hit
         </Button>
         <Button disabled={status !== 'PLAYING'} onClick={stay}>
