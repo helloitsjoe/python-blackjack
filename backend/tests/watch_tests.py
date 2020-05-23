@@ -33,6 +33,10 @@ def watcher(project_path=None, test_path=None):
 
     print(f'Watching {test_path or "tests"} in {project_path}')
 
+    # Run tests before starting watch
+    cmd = ["pytest", current_path, "-v"]
+    subprocess.call(cmd)
+
     f_dict = {}
 
     while True:
