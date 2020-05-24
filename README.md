@@ -5,26 +5,33 @@
 
 ## To run in Minikube:
 
-1. Make sure minikube is running: 
+1. Make sure minikube is running:
+
 ```
 minikube status
 ```
+
 2. In the `k8s` directory, create services/deployments:
+
 ```
 kubectl apply -f .
 ```
+
 3. Enable an ingress controller:
+
 ```
 minikube addons enable ingress
 ```
+
 4. Open a browser to the minikube IP address. You can find it by running:
+
 ```
 minikube ip
 ```
 
 ## To run in Docker:
 
-1. `yarn build:local` in `frontend` directory
+1. `yarn watch` in `frontend` directory
 2. `docker-compose up --build` in root
 3. Open `localhost` in a browser
 
@@ -43,9 +50,8 @@ after making changes to `frontend`:
 2. Rebuild docker image: `docker build -t helloitsjoe/blackjack-preact-frontend:minikube .` (Note
    the `.`)
 3. Push to docker hub: `docker push helloitsjoe/blackjack-preact-frontend:minikube`
-4. Despite the `imagePullPolicy: Always` in the `deployment.yml`, it will not pull a new image without
-restarting (`apply` is not enough)
+4. Despite the `imagePullPolicy: Always` in the `deployment.yml`, it will not pull a new image
+   without restarting (`apply` is not enough)
 5. In the `k8s` directory, bring down the running kubernetes pods for the frontend:
    `kubectl delete -f preact-frontend.yml`
 6. Restart them: `kubectl apply -f preact-frontend.yml`
-
