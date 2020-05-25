@@ -75,3 +75,6 @@ class Deck:
     def deal_one(self):
         card = self.cards.pop()
         return card
+
+    def to_nums(self):
+        return list(map(lambda c: c.num, self.cards))

@@ -8,7 +8,7 @@ from game.player import Player, Dealer
 # service instead of sending back and forth to client
 
 
-def play(json):
+def play(json=None, deck_nums=None):
     validate_body(json)
 
     type = json["type"]
@@ -16,13 +16,18 @@ def play(json):
 
     if type == "DEAL":
         player = Player(bank=Bank(json["balance"]), bet_amount=int(json["bet"]))
+        # TODO: Check if deck exists to use the same one
+        # deck = redis.get("deck") or Deck(shuffle=True)
+        # game = Game(player=player, deck=deck)
         game = Game(player=player)
         game.start_server()
         return make_response(game)
 
+    validate_deck_input(deck_nums)
+
     player_cards = deserialize_cards(json["player_cards"])
     dealer_cards = deserialize_cards(json["dealer_cards"])
-    deck = Deck(json["deck"])
+    deck = Deck(card_nums=deck_nums)
     player = Player(
         bank=Bank(json["balance"]), bet_amount=json["bet"], cards=player_cards
     )
@@ -31,17 +36,16 @@ def play(json):
 
     if type == "HIT":
         card = game.player_go_remote()
-        return make_response(game)
 
     if type == "STAY":
         dealer_cards = game.dealer_go()
-        return make_response(game)
 
     if type == "DOUBLE":
         card = game.player_double_down_remote()
         # Double down should end game
         dealer_cards = game.dealer_go()
-        return make_response(game)
+
+    return make_response(game)
 
 
 def make_response(game):
@@ -50,9 +54,10 @@ def make_response(game):
         "dealer_cards": serialize_cards(game.dealer.cards),
         "player_total": game.player.total,
         "dealer_total": game.dealer.total,
+        # TODO: balance in redis?
         "balance": game.player.balance,
         "status": game.player.status,
-        "deck": get_card_nums(game.deck.cards),
+        "deck": game.deck.to_nums(),
     }
 
 
@@ -64,10 +69,7 @@ def deserialize_cards(cards):
     return list(map(lambda c: Card(c["num"]), cards))
 
 
-def get_card_nums(cards):
-    return list(map(lambda c: c.num, cards))
-
-
+# Validation
 def validate_body(body):
     if not body:
         raise Exception("body is required")
@@ -83,5 +85,9 @@ def validate_body(body):
     # TODO: More strict type validation here (check type of cards)
     if "player_cards" not in body or "dealer_cards" not in body:
         raise Exception("player_cards and dealer_cards are required")
-    if "deck" not in body or not all(type(card) == int for card in body["deck"]):
-        raise Exception("deck is required to be a list of numbers")
+
+
+def validate_deck_input(deck_nums):
+    for num in deck_nums:
+        if type(num) != int:
+            raise Exception("deck is required to be a list of numbers")
