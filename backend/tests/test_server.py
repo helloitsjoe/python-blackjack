@@ -134,49 +134,6 @@ body_data = [
         "player_cards and dealer_cards are required",
         {"type": "HIT", "bet": 5, "balance": 100, "dealer_cards": []},
     ),
-    (
-        "deck is required to be a list of numbers",
-        {
-            "type": "HIT",
-            "bet": 5,
-            "balance": 100,
-            "player_cards": [],
-            "dealer_cards": [],
-        },
-    ),
-    (
-        "deck is required to be a list of numbers",
-        {
-            "type": "HIT",
-            "bet": 5,
-            "balance": 100,
-            "player_cards": [],
-            "dealer_cards": [],
-            "deck": "foo",
-        },
-    ),
-    (
-        "deck is required to be a list of numbers",
-        {
-            "type": "HIT",
-            "bet": 5,
-            "balance": 100,
-            "player_cards": [],
-            "dealer_cards": [],
-            "deck": [Card(1)],
-        },
-    ),
-    (
-        "deck is required to be a list of numbers",
-        {
-            "type": "HIT",
-            "bet": 5,
-            "balance": 100,
-            "player_cards": [],
-            "dealer_cards": [],
-            "deck": [{"face": "K", "value": 10, "num": 13, "suit": "clubs"}],
-        },
-    ),
 ]
 
 

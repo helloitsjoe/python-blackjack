@@ -10,7 +10,9 @@ CORS(app)
 
 @app.route("/game", methods=["POST"])
 def play():
-    responseData = index.play(request.get_json())
+    json = request.get_json()
+    deck_nums = json.get("deck") if json else None
+    responseData = index.play(json=json, deck_nums=deck_nums)
     return jsonify(data=responseData)
 
 
