@@ -30,7 +30,6 @@ const gameReducer = (s, a) => {
     dealer_total: dealerTotal,
     status,
     balance,
-    deck,
   } = a.data;
 
   const hiddenDealer = hide(dealerCards);
@@ -39,7 +38,6 @@ const gameReducer = (s, a) => {
     case DEAL: {
       return {
         ...s,
-        deck,
         balance,
         playerCards,
         playerTotal,
@@ -57,7 +55,6 @@ const gameReducer = (s, a) => {
         playerTotal,
         balance,
         status,
-        deck,
       };
     }
     case STAY:
@@ -70,7 +67,6 @@ const gameReducer = (s, a) => {
         playerTotal,
         balance,
         status,
-        deck,
       };
     }
     default:
@@ -80,7 +76,7 @@ const gameReducer = (s, a) => {
 
 export default function App({ send = sendCommand }) {
   const [
-    { playerCards, playerTotal, dealerCards, dealerTotal, status, balance, bet, deck },
+    { playerCards, playerTotal, dealerCards, dealerTotal, status, balance, bet },
     dispatch,
   ] = useReducer(gameReducer, {
     playerCards: [],
@@ -116,17 +112,17 @@ export default function App({ send = sendCommand }) {
   };
 
   const hit = () =>
-    send({ type: HIT, balance, bet, playerCards, dealerCards, deck }).then(data => {
+    send({ type: HIT, balance, bet, playerCards, dealerCards }).then(data => {
       dispatch({ type: HIT, data });
     });
 
   const stay = () =>
-    send({ type: STAY, balance, bet, playerCards, dealerCards, deck }).then(data => {
+    send({ type: STAY, balance, bet, playerCards, dealerCards }).then(data => {
       dispatch({ type: STAY, data });
     });
 
   const doubleDown = () =>
-    send({ type: DOUBLE, balance, bet, playerCards, dealerCards, deck }).then(data => {
+    send({ type: DOUBLE, balance, bet, playerCards, dealerCards }).then(data => {
       dispatch({ type: DOUBLE, data });
     });
 
