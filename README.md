@@ -37,7 +37,7 @@ minikube ip
 
 ## To run locally:
 
-1. `python server.py` in `backend` directory
+1. `LOCAL=true python server.py` in `backend` directory
 2. `yarn watch` in `frontend` directory
 3. `open dist/index.html` in `frontend` directory
 
