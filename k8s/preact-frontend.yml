@@ -36,7 +36,7 @@ spec:
         app: blackjack-preact-frontend
     spec:
       containers:
-        - image: helloitsjoe/blackjack-preact-frontend:minikube
+        - image: helloitsjoe/blackjack-preact-frontend:3.0-minikube
           imagePullPolicy: Always
           name: blackjack-preact-frontend
           ports:
