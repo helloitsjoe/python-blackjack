@@ -36,7 +36,7 @@ spec:
         app: blackjack-python-backend
     spec:
       containers:
-        - image: helloitsjoe/blackjack-python-backend:3.0-minikube
+        - image: helloitsjoe/blackjack-python-backend:minikube
           imagePullPolicy: Always
           name: blackjack-python-backend
           ports:
