@@ -1,9 +1,18 @@
 version: '3.2'
 
 services:
+  redis:
+    # TODO: Look into Redis warnings
+    image: redis:6
+    ports:
+      - '6379:6379'
+
   flask:
-    build: ./backend
     # image: helloitsjoe/blackjack-python-backend:latest
+    build:
+      context: ./backend
+    environment:
+      - LOCAL
     volumes:
       - ./backend:/app
     ports:
