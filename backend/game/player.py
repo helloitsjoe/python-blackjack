@@ -88,31 +88,12 @@ class AbstractPlayer:
 
 
 class Player(AbstractPlayer):
-    def play_remote(self, deck):
+    def play_turn(self, deck):
         card = self.add_card(deck.deal_one())
         print("Player:", self.total, str(self.cards))
         print("status", self.status)
         return card
 
-    def play_turn(self, deck):
-        answer = input("Hit or stay? ")
-
-        self.turns_remaining -= 1
-        if self.turns_remaining == 0:
-            self.status = "DONE"
-
-        if answer.lower()[0] == "h":
-            self.add_card(deck.deal_one())
-            print("Player:", self.total, str(self.cards))
-            if self.status == Statuses["PLAYING"]:
-                return self.play_turn(deck)
-            if self.status == Statuses["BUST"] or self.status == Statuses["BLACKJACK"]:
-                return self.status
-        # Anything other than 'hit' or 'stay', repeat question
-        elif answer.lower()[0] != "s":
-            if self.status == Statuses["PLAYING"]:
-                return self.play_turn(deck)
-        return self.status
 
 
 class Dealer(Player):

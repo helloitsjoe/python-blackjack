@@ -4,7 +4,7 @@ from game.bank import Bank
 from game.player import Player, Dealer
 
 # TODO: Multiple players/hands
-# TODO: balance, bet, and deck can be persisted in another
+# TODO: balance, bet can be persisted in another
 # service instead of sending back and forth to client
 
 
@@ -20,7 +20,7 @@ def play(json=None, deck_nums=None):
         # deck = redis.get("deck") or Deck(shuffle=True)
         # game = Game(player=player, deck=deck)
         game = Game(player=player)
-        game.start_server()
+        game.start()
         return make_response(game)
 
     validate_deck_input(deck_nums)
@@ -35,13 +35,13 @@ def play(json=None, deck_nums=None):
     game = Game(player=player, dealer=dealer, deck=deck)
 
     if type == "HIT":
-        card = game.player_go_remote()
+        card = game.player_go()
 
     if type == "STAY":
         dealer_cards = game.dealer_go()
 
     if type == "DOUBLE":
-        card = game.player_double_down_remote()
+        card = game.player_double_down()
         # Double down should end game
         dealer_cards = game.dealer_go()
 

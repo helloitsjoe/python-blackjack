@@ -1,6 +1,5 @@
 # TODO:
 # Restart deck if all cards are dealt
-# Remove non-server methods
 # split
 # Multiplayer
 
@@ -17,24 +16,14 @@ class Game:
         self.dealer = dealer or Dealer()
 
     def start(self):
-        # self.player.prompt_name()
-        self.deal_player()
-        self.deal_dealer()
-        self.player_go()
-        self.dealer_go()
-
-    def start_server(self):
         self.deal_player()
         self.deal_dealer()
 
     def player_go(self):
-        self.player.play_turn(self.deck)
-
-    def player_go_remote(self):
-        card = self.player.play_remote(self.deck)
+        card = self.player.play_turn(self.deck)
         return card
 
-    def player_double_down_remote(self):
+    def player_double_down(self):
         card = self.player.double_down(self.deck.deal_one())
         return card
 
@@ -80,8 +69,3 @@ class Game:
             self.player.win(self.player.bet_amount)
             print("YOU TIE!")
         print("Balance:", self.player.balance, flush=True)
-
-
-if __name__ == "__main__":
-    game = Game()
-    game.start()

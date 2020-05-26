@@ -64,10 +64,10 @@ class TestBet:
     def test_player_bet(self):
         player = Player(bank=Bank(10), bet_amount=5)
         game = Game(player=player, deck=Deck(card_nums=[10, 10, 10, 10, 10]))
-        game.start_server()
+        game.start()
         assert player.balance == 5
         assert player.total == 20
-        game.player_go_remote()
+        game.player_go()
         assert player.total == 30
         assert player.status == Statuses["BUST"]
         assert player.balance == 5
@@ -75,7 +75,7 @@ class TestBet:
     def test_player_win(self):
         player = Player(bank=Bank(10), bet_amount=5)
         game = Game(player=player, deck=Deck(card_nums=[10, 9, 10, 10]))
-        game.start_server()
+        game.start()
         assert player.balance == 5
         assert player.total == 20
         game.dealer_go()
@@ -85,7 +85,7 @@ class TestBet:
     def test_player_blackjack(self):
         player = Player(bank=Bank(10), bet_amount=5)
         game = Game(player=player, deck=Deck(card_nums=[10, 9, 10, 1]))
-        game.start_server()
+        game.start()
         assert player.balance == 5
         assert player.total == 21
         game.dealer_go()
@@ -95,7 +95,7 @@ class TestBet:
     def test_tie(self):
         player = Player(bank=Bank(10), bet_amount=5)
         game = Game(player=player, deck=Deck(card_nums=[10, 9, 10, 9]))
-        game.start_server()
+        game.start()
         assert player.balance == 5
         assert player.total == 19
         game.dealer_go()
@@ -106,7 +106,7 @@ class TestBet:
         player = Player(bank=Bank(10), bet_amount=5)
         deck = Deck(card_nums=[10, 9, 10, 5, 5])
         game = Game(player=player, deck=deck)
-        game.start_server()
+        game.start()
         assert player.balance == 5
         assert player.total == 10
         player.double_down(deck.deal_one())
@@ -123,5 +123,5 @@ class TestBet:
     #     player = Player(bank=Bank(10))
     #     deck = Deck(cards=make_cards([10, 9, 10, 9]))
     #     game = Game(player=player, deck=deck)
-    #     game.start_server(bet=5, shuffle=False)
+    #     game.start(bet=5, shuffle=False)
     #     ...
