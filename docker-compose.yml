@@ -11,6 +11,8 @@ services:
     # image: helloitsjoe/blackjack-python-backend:latest
     build:
       context: ./backend
+    depends_on:
+      - redis
     environment:
       - LOCAL
     volumes:
