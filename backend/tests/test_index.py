@@ -19,12 +19,20 @@ def test_deal_new_deck():
 
 
 def test_deal_existing_deck():
-    # TODO
-    pass
+    response = index.play(
+        json={"type": "DEAL", "bet": 5, "balance": 100}, deck_nums=[1, 2, 3, 4, 5]
+    )
+    assert "player_cards" in response
+    assert "dealer_cards" in response
+    assert "status" in response
+    assert "balance" in response
+    assert "player_total" in response
+    assert "dealer_total" in response
+    assert len(response["deck"]) == 1
 
 
 def test_deal_end_of_deck():
-    # TODO
+    # TODO Empty deck should shuffle and create new deck
     pass
 
 

@@ -16,10 +16,10 @@ def play(json=None, deck_nums=None):
 
     if type == "DEAL":
         player = Player(bank=Bank(json["balance"]), bet_amount=int(json["bet"]))
-        # TODO: Check if deck exists to use the same one
-        # deck = redis.get("deck") or Deck(shuffle=True)
-        # game = Game(player=player, deck=deck)
-        game = Game(player=player)
+        deck = (
+            Deck(card_nums=deck_nums, shuffle=True) if deck_nums else Deck(shuffle=True)
+        )
+        game = Game(player=player, deck=deck)
         game.start()
         return make_response(game)
 

@@ -11,6 +11,7 @@ class Game:
     # Gotcha: In python, default args are evaluated when the module
     # is evaluated, NOT at runtime. Default args will be mutated!
     def __init__(self, deck=None, player=None, dealer=None):
+        # TODO: deck, player, dealer validation
         self.deck = deck or Deck(shuffle=True)
         self.player = player or Player()
         self.dealer = dealer or Dealer()

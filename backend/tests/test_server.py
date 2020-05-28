@@ -11,7 +11,7 @@ def client():
             pass
 
         def get_list(self, key):
-            return [9, 10]
+            return [9, 10, 11, 12]
 
     with make_server(redis_client=MockRedisClient()).test_client() as client:
         yield client

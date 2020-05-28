@@ -1,10 +1,14 @@
-from flask import Flask, jsonify, request, logging
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from redis_client import RedisClient
 import sys
 import os
 
+# import logging
+
 from routes import index
+
+# logging.basicConfig(level="INFO")
 
 
 def make_server(redis_client=None):
