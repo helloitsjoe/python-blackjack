@@ -15,6 +15,7 @@ def make_server(redis_client=None):
     app = Flask(__name__)
     CORS(app)
 
+    # Using Redis as a simple persistence service
     if not redis_client:
         redis_client = RedisClient(host="redis")
 
