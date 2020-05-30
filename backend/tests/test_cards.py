@@ -18,6 +18,18 @@ def test_deck_makes_cards_from_nums():
         assert isinstance(card, Card)
 
 
+def test_empty_deck():
+    deck = Deck(card_nums=[1])
+    deck.deal_one()
+    deck.deal_one()
+    assert len(deck.cards) == 51
+    # should shuffle
+    nums = [card.num for card in deck.cards]
+    unshuffled = Deck()
+    unshuffled.deal_one()
+    ordered_nums = [card.num for card in unshuffled.cards]
+    assert nums != ordered_nums
+
 
 def test_Card_toJSON():
     json = Card(5).toJSON()

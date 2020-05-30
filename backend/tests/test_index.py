@@ -31,11 +31,6 @@ def test_deal_existing_deck():
     assert len(response["deck"]) == 1
 
 
-def test_deal_end_of_deck():
-    # TODO Empty deck should shuffle and create new deck
-    pass
-
-
 def test_hit():
     player_cards = index.serialize_cards(make_cards([4, 5]))
     dealer_cards = index.serialize_cards(make_cards([6, 7]))

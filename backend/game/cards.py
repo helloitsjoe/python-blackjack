@@ -57,24 +57,22 @@ class Card:
 
 class Deck:
     def __init__(self, card_nums=None, shuffle=False):
-        self.cards = (
-            list(map(lambda num: Card(num), card_nums))
-            if card_nums
-            else self.create_deck()
-        )
+        self.cards = self.create_deck(card_nums=card_nums, shuffle=shuffle)
 
+    def create_deck(self, card_nums=None, shuffle=False):
+        self.cards = (
+            [Card(num) for num in card_nums]
+            if card_nums
+            else [Card(n) for n in range(1, 53)]
+        )
         if shuffle:
             self.cards = random.sample(self.cards, len(self.cards))
-
-    def create_deck(self):
-        cards = []
-        for n in range(1, 53):
-            cards.append(Card(n))
-        return cards
+        return self.cards
 
     def deal_one(self):
-        card = self.cards.pop()
-        return card
+        if len(self.cards) == 0:
+            self.cards = self.create_deck(shuffle=True)
+        return self.cards.pop()
 
     def to_nums(self):
-        return list(map(lambda c: c.num, self.cards))
+        return [c.num for c in self.cards]

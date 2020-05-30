@@ -1,5 +1,4 @@
 # TODO:
-# Restart deck if all cards are dealt
 # split
 # Multiplayer
 
