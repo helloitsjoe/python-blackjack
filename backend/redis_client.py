@@ -29,4 +29,4 @@ class RedisClient:
         string_list = self.redis.get(key)
         if not string_list:
             return None
-        return list(map(int, string_list.split(",")))
+        return [int(value) for value in string_list.split(",")]

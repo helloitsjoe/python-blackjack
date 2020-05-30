@@ -4,10 +4,6 @@ from game.player import Player, Statuses
 from game.bank import Bank
 import pytest
 
-# helper for map
-def get_nums(card):
-    return card.num
-
 
 def test_has_deck():
     game = Game()
@@ -18,8 +14,8 @@ def test_deck_shuffled():
     game = Game()
 
     deck = Deck(shuffle=False)
-    game_cards = list(map(get_nums, game.deck.cards))
-    deck_cards = list(map(get_nums, deck.cards))
+    game_cards = [card.num for card in game.deck.cards]
+    deck_cards = [card.num for card in deck.cards]
     assert game_cards != deck_cards
 
 

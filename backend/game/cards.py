@@ -3,7 +3,7 @@ import json
 
 
 def make_cards(nums):
-    return list(map(lambda num: Card(num), nums))
+    return [Card(num) for num in nums]
 
 
 class Card:

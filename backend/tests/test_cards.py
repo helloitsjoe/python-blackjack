@@ -1,7 +1,5 @@
 from game.cards import Deck, Card
 
-from .test_game import get_nums
-
 
 def test_has_cards():
     deck = Deck()
@@ -44,9 +42,9 @@ def test_shuffle():
     deck = Deck()
     deck_shuffled = Deck(shuffle=True)
 
-    nums = list(map(get_nums, deck.cards))
+    nums = [card.num for card in deck.cards]
     assert nums == list(range(1, 53))
 
-    nums_shuffled = list(map(get_nums, deck_shuffled.cards))
+    nums_shuffled = [card.num for card in deck_shuffled.cards]
     assert len(nums_shuffled) == 52
     assert nums != nums_shuffled

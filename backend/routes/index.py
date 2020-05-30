@@ -62,11 +62,11 @@ def make_response(game):
 
 
 def serialize_cards(cards):
-    return list(map(lambda c: c.toJSON(), cards))
+    return [c.toJSON() for c in cards]
 
 
 def deserialize_cards(cards):
-    return list(map(lambda c: Card(c["num"]), cards))
+    return [Card(c["num"]) for c in cards]
 
 
 # Validation
