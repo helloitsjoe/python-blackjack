@@ -142,16 +142,26 @@ export default function App({ send = sendCommand }) {
             />
           </label>
         </form>
-        <Button disabled={status === 'PLAYING'} onClick={deal} ref={dealButton}>
+        <Button
+          data-testid="button-deal"
+          disabled={status === 'PLAYING'}
+          onClick={deal}
+          ref={dealButton}
+        >
           Deal
         </Button>
-        <Button disabled={status !== 'PLAYING'} onClick={hit} ref={hitButton}>
+        <Button
+          data-testid="button-hit"
+          disabled={status !== 'PLAYING'}
+          onClick={hit}
+          ref={hitButton}
+        >
           Hit
         </Button>
-        <Button disabled={status !== 'PLAYING'} onClick={stay}>
+        <Button data-testid="button-stay" disabled={status !== 'PLAYING'} onClick={stay}>
           Stay
         </Button>
-        <Button disabled={status !== 'PLAYING'} onClick={doubleDown}>
+        <Button data-testid="button-double" disabled={status !== 'PLAYING'} onClick={doubleDown}>
           Double Down
         </Button>
         <h2>{messages[status]}</h2>

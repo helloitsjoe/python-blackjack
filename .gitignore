@@ -10,3 +10,4 @@ coverage
 .coverage
 htmlcov
 dist
+frontend/cypress/integration/examples/
