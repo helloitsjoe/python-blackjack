@@ -15,8 +15,9 @@ services:
       - redis
     environment:
       - LOCAL
-    volumes:
-      - ./backend:/app
+    # Enable volumes to watch for local changes
+    # volumes:
+    #   - ./backend:/app
     ports:
       - '5000:5000'
 
@@ -26,7 +27,10 @@ services:
       context: ./frontend
       args:
         LOCAL: 'true'
-    volumes:
-      - ./frontend/dist:/usr/share/nginx/html
+    depends_on:
+      - flask
+    # Enable volumes to watch for local changes
+    # volumes:
+    #   - ./frontend/dist:/usr/share/nginx/html
     ports:
       - '80:80'
