@@ -12,4 +12,5 @@ htmlcov
 dist
 frontend/cypress/integration/examples/
 frontend/cypress/videos/
+frontend/cypress/screenshots
 frontend/.nyc_output
