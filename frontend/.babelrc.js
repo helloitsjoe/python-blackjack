@@ -1,6 +1,9 @@
 const makeBabelConfig = require('babel-react-simple');
 
 const config = makeBabelConfig();
-config.plugins.push('istanbul');
+if (process.env.CYPRESS) {
+  // This breaks jest tests, so only include it for cypress tests
+  config.plugins.push('istanbul');
+}
 
 module.exports = config;

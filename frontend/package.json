@@ -6,7 +6,9 @@
   "scripts": {
     "build": "webpack --mode=production",
     "watch": "LOCAL=true webpack --mode=development --watch",
-    "test": "jest"
+    "test": "jest",
+    "cy:open": "CYPRESS=true cypress open",
+    "cy:run": "CYPRESS=true cypress run"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
